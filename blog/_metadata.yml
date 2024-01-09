@@ -1,0 +1,25 @@
+# options specified here will apply to all posts in this folder
+
+# freeze computational output
+# (see https://quarto.org/docs/projects/code-execution.html#freeze)
+freeze: true
+
+author:
+  - id: sn
+    number: 1
+    name:
+      given: Saeejith
+      family: Nair
+      literal: Saeejith Nair
+    email: smnair@uwaterloo.ca
+format:
+  html:
+    df-print: paged
+    toc: true
+    code-overflow: wrap
+    mermaid:
+      theme: neutral
+# citation:
+#   type: article
+reference-location: margin
+citation-location: margin

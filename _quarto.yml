@@ -1,0 +1,33 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Saeejith Nair"
+  site-url: https://www.saeejithnair.github.io
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: projects
+        text: Projects
+      - href: blog
+        text: Posts
+  page-footer:
+    left: "Built with ❤️ and [Quarto](https://quarto.org/). Feel free to steal this website's [source code](https://github.com/saeejithnair/saeejithnair.github.io)."
+    right: "© CC BY-NC-SA 4.0"
+  twitter-card: true
+  open-graph: true
+  google-analytics: "G-JYHXLHGZEH"
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    toc_smooth_scroll: true
+    toc_highlight: true
+    fig-align: left
+

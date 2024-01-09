@@ -1,0 +1,6 @@
+- title: "GEN-NeRF"
+  author: Saeejith Nair
+  date: 2023-10-01
+  path: "https://saeejithnair.github.io/nerf-optimization/"
+  categories: [projects, nerf]
+  description: "A project to optimize NeRF using Neural Architecture Search"

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Saeejith Nair</title>
+<link>https://www.saeejithnair.github.io/blog/</link>
+<atom:link href="https://www.saeejithnair.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.4.537</generator>
+<lastBuildDate>Mon, 08 Jan 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Research Workflows</title>
+  <dc:creator>Saeejith Nair</dc:creator>
+  <link>https://www.saeejithnair.github.io/blog/posts/research_workflows/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Research is a lot of fun but I’ve found that without the right tools, a lot of annoyingly small issues can add up and become a source of friction over time. In this post, I’m going to try and document some of my existing strategies as well as plan out workflows for the remaining bottlenecks. Overall, there’s 5 broad areas which have high coefficients of friction (yes this is the entire research process but bear with me):</p>
+<ol type="1">
+<li>Archiving and organizing literature</li>
+<li>Revisiting literature</li>
+<li>Running and managing experiments</li>
+<li>Analyzing and communicating results</li>
+<li>Writing the paper</li>
+</ol>
+<section id="archiving-and-organizing-literature" class="level2">
+<h2 class="anchored" data-anchor-id="archiving-and-organizing-literature">Archiving and Organizing Literature</h2>
+<p>Who needs Twitter’s Firehose API when you can get your own personal firehose of papers for the low, low price of being a terminally online doomscroller. I used to bookmark everything interesting I came across but since bookmarks are inherently unsearchable (<del>why isn’t this a thing yet??</del> nvm while writing this, I found a <a href="https://blog.google/products/chrome/search-your-tabs-bookmarks-and-history-in-the-chrome-address-bar/">Chrome product announcement</a> from Dec 2022, so turns out you can indeed search through your bookmarks now), this quickly became a mountain of links that I never ended up revisiting. Regardless, the bottleneck is neither finding nor saving papers, but rather organizing them in a way that makes them easy to recall and consume. I’ve tried a number of different approaches over the years but I think I’ve finally settled on a workflow that works for me.</p>
+<section id="saving-papers" class="level3">
+<h3 class="anchored" data-anchor-id="saving-papers">Saving Papers</h3>
+<p><em>tldr; Save to <a href="https://readwise.io/read">Readwise Reader</a> inbox and immediately tag based on title and abstract.</em></p>
+<p>I’ve been using Readwise Reader for a few months now and it’s one of the few subscriptions I don’t regret paying for. The biggest benefit is that I can easily save links, papers, Twitter threads, or even YouTube videos to the mobile app (in 2 clicks) or with the Chrome extension on desktop (1 click) and it automatically syncs across devices. Since Reader is designed for reading, annotations are a first-class feature (even for PDFs), which means that I don’t necessarily have to wait until I get back to my desktop to read something I have saved. I can just read it on my phone and jot down annotations as I go along. The best part is that everything I annotate gets automatically pushed to my Obsidian knowledge base, which means that if I need to pull up a paper again in the future, I can just search for it in Obsidian and all my annotations will be there. I also try to add some tags as soon as I save something, and these get automatically exported to the Obsidian note as well, which makes it easier to find papers later on.</p>
+</section>
+<section id="organizing-papers" class="level3">
+<h3 class="anchored" data-anchor-id="organizing-papers">Organizing Papers</h3>
+<p><em>tldr; Use <a href="https://www.zotero.org/">Zotero</a> to index the correct metadata for a paper and then export it to <a href="https://obsidian.md/">Obsidian</a> where you can synthesize a short note based on your previous Readwise annotations.</em></p>
+<p>If it seems like I’m doing double (triple?) the work by saving the same paper to Readwise, Obsidian, AND Zotero, yessir you’re absolutely correct. Unfortunately, c’est la vie and until someone builds a (free) app that does everything I want, I’m going to continue with this workflow. But fret not because this isn’t as bad as it sounds and it effectively addresses a number of different pain points.</p>
+<p>Consider the situation where let’s say CVPR acceptances have just come out and your firehose is full of “Thrilled to share” posts… that still link to an arXiv. Or maybe someone posts a thread to a neat finding they made and Reviewer 2 jumps in the replies to point out that this was already done by Schmidhuber in 1996… with a link to a PDF hosted on HAL. I love open dissemination of science as much as the next guy but until Zotero figures out a way to intelligently merge duplicate entries, I’m going to try and save the “official” version of the paper, so that I don’t have to manually update my BibLaTeX file a couple hours before whichever conference deadline I’m rushing to meet. That being said, I still want to save the link and quickly skim the paper I came across, which I can do with Reader. And at the end of the day, after I’ve finished annotating the saved copy or tagged and moved it from my <em>Inbox</em> tab into the <em>Later</em> tab on Reader, I use the <a href="https://chromewebstore.google.com/detail/google-scholar-button/ldipcbpaocekfooobnbcddclnhejkcpn">Google Scholar</a> extension to quickly find the published version of the paper and save the final version to Zotero (along with the correct metadata).</p>
+<p>Once it’s saved to Zotero, I use <a href="http://zotfile.com/">ZotFile</a> to automatically rename the PDF and reformat the metadata to create a citation key that’s both short, informative, and easy to remember. A few seconds after a paper is formatted correctly, a background service uses Zotero’s <em>Export Library</em> feature to add the newly indexed paper to a BibLaTeX-based mirror of my Zotero database. This file lives inside my Obsidian vault and is automatically backed up to my GitHub repo. I can then switch to my Obsidian vault and use a keyboard shortcut to trigger a refresh of the citation plugin which queries the updated database and creates a new templated note for the newly added paper, along with an <code>#unread</code> tag, which signifies that I haven’t properly synthesized a note for that paper yet. The nice thing about Obsidian is that the Dataview plugin lets me create a dashboard in my Daily Note showing all the papers I’ve saved to Zotero but haven’t read yet. This means that I can quickly skim through the list and decide which papers I want to read next. Once I’ve read a paper and synthesized a note, I can just remove the <code>#unread</code> tag and the paper will disappear from the dashboard.</p>
+</section>
+</section>
+<section id="revisiting-literature" class="level2">
+<h2 class="anchored" data-anchor-id="revisiting-literature">Revisiting Literature</h2>
+<p><em>tldr; Unsure, check back later to see what I’ve converged on.</em></p>
+<p>I ended off the last section saying how the paper will disappear from the dashboard once you remove the tag. Unfortunately, the paper usually disappears from my memory as well, especially if it’s something that’s not directly related to my current research.</p>
+<section id="local-rag-based-search" class="level3">
+<h3 class="anchored" data-anchor-id="local-rag-based-search">Local RAG-based Search?</h3>
+<p>I don’t have a great solution for this yet, but over New Years I wanted to dig into all the new LLM/RAG methods that have come out so I got a simple app working that does RAG-style question answering based on the notes/papers in my Obsidian vault. I’ll have to write another post about it soon but I was pretty happy with the results, especially considering the fact that it was running locally (albeit still on a GPU). The next step is to get it running fully on-device on my M1 Macbook which I think should be doable based on some of my preliminary tests of Apple’s new <a href="https://github.com/ml-explore/mlx">MLX</a> framework.</p>
+</section>
+<section id="improved-spaced-repetition" class="level3">
+<h3 class="anchored" data-anchor-id="improved-spaced-repetition">Improved Spaced-Repetition?</h3>
+<p>There’s a few AI assistant plugins for Obsidian already but none of them seem to tick all of the boxes so at some point, I’d like to build my own plugin. Ideally it would be able to work with me to generate Anki cards for papers I’ve recently read and then provide additional context after I review each card, to remind me of neat tidbits I might’ve forgotten. I’d also like to be able to ask it questions about papers I’ve read in the past and have it pull up the relevant notes. I think this is doable with the current state of the art but I’ll have to do some more research to figure out the best way to go about it.</p>
+</section>
+<section id="serendipity-based-research-recommender-system" class="level3">
+<h3 class="anchored" data-anchor-id="serendipity-based-research-recommender-system">Serendipity Based Research Recommender System?</h3>
+<p>One thing I’ve gotten hooked on recently though is the idea of using serendipity in recommender systems. I had some really exciting conversations with folks after the ALOE workshop at NeurIPS (completely unrelated to recommender systems) and over the holidays I <em>serendipitously</em> came across Ken Stanley’s new startup, <a href="https://www.heymaven.com/">Maven</a>, which is building a new social network based on serendipity. I think there’s a lot of unexplored potential in this space and I think one area where it could be really useful is in the context of research. Imagine having an assistant that serendipitously reminds you of a paper or an idea that’s not directly related to your current research but makes connections between ideas in different fields, thereby giving you a fresh perspective on how to solve something you’re stuck on! Plus, since it’s an Obsidian plugin, the chances of it hallucinating something completely random would be pretty low because it’s grounded in <em>your</em> notes, and your TODO list, and is actually aware of what you’re working on a day-to-day basis.</p>
+</section>
+</section>
+<section id="running-and-managing-experiments" class="level2">
+<h2 class="anchored" data-anchor-id="running-and-managing-experiments">Running and Managing Experiments</h2>
+<p>I often work on a number of different projects simultaneously and because they’re all research-y/open-ended, I end up running a lot of experiments and making iterative improvements. But with the number of things I try out, I don’t seem to have yet found a clean yet straightforward approach for keeping track of everything. So far, I’ve been parallelizing experiments across heterogeneous compute nodes using WandB sweeps, logging everything to their backend, and using WandB reports to share key findings with collaborators. This is a much better workflow than what I had when I originally started doing ML and I had to SSH into remote servers to inspect Tensorboard logs saved on each filesystem.</p>
+<p>While this setup had its frustrations and bottlenecks, it’s recently become unusable. Turns out that my WandB academic tier plan only supports 100GB of storage (which I’d surpassed months ago) and I am currently sitting at 3.1TB of logs/data that they’ve recently sent me an update about. I love WandB but there’s no way I’m paying them $90/month which means it’s time to be scrappy and build something ourselves. Honestly, I think as long as I can keep the per experiment data usage below the threshold (which should definitely be possible), it should be ok? Or even better, if I can get an on-premise, locally hosted version of the WandB server up and running, I can keep using as much storage as I want. The main problem is reliability - I don’t know if the servers we have on campus will be able to keep up and I don’t particularly fancy being a sysadmin. It’s honestly kind of wild when you think about the various challenges involved and look into how people solve it at scale, and turns out you either have some universities with their own massive IT department or startups burning their runway on other startups that provide niche monitoring solutions. If you have neither, you build it yourself. <em>Onwards!</em></p>
+<p>As I migrate to my own locally hosted experiment management system, I’ll progressively update this section with my findings.</p>
+</section>
+<section id="analyzing-and-communicating-results" class="level2">
+<h2 class="anchored" data-anchor-id="analyzing-and-communicating-results">Analyzing and Communicating Results</h2>
+<p><em>tldr; Use <a href="https://quarto.org/">Quarto</a> to create interactive reports with rich multimedia and LaTEX.</em></p>
+<p>Especially now that I’m moving away from storing my data on WandB, I need a way to quickly pull the data I want, process it, and publish results/findings. I’ve also decided to start blogging about my intermediate results and creating polished figures as I go along, so that hopefully the process of writing the paper at the end is less painful as I can just copy-paste writing that I already published on my blog into the paper. No, this isn’t plagiarism, and if some handbook says it is, we ought to rewrite the handbook (but in the meantime I’ll just cite myself if you reeeeally want). Science (and publishing by extension) should be about sharing knowledge and ideas in a manner that is clear and reproducible, not about jumping through hoops to appease some arbitrary standard.</p>
+<p>I think Quarto is the way to go here. It’s a relatively new framework but it’s already got a lot of the features I want and I think it’s only going to get better over time. The community seems to love sharing reproducible demos and tutorials in Google Colab, and I think that’s fine. But I personally don’t think Colab (or regular Jupyter Notebooks) are a good interface for sharing results. It’s clunky (scrolling through a long notebook is an awful experience), aesthetically unpleasing (does not make use of screen space very well), difficult to style, and is not responsive on mobile. While tools like <code>nbdev</code> solve some of the problems related to using notebooks with version control, it hasn’t become mainstream yet (despite being around for a few years now) and most Colab notebooks today are still that – notebooks. Lastly, notebooks cannot be easily exported to other formats or embedded into the wider web ecosystem. I’m really excited that Quarto solves all of these problems and part of my goal in starting this blog is to figure out how to use it better and communicate my research more effectively with the wider community.</p>
+</section>
+<section id="writing-the-paper" class="level2">
+<h2 class="anchored" data-anchor-id="writing-the-paper">Writing the Paper</h2>
+<p><em>tldr; (for now) Use <a href="https://www.overleaf.com/">Overleaf</a> to collaborate with co-authors and write the paper.</em></p>
+<p>While most researchers use Overleaf today, it seems that many people use it on the free personal plan, without realizing that if you’re at a University, you (probably) have access to the Overleaf Premium tier for free. The only real difference between the two is that the Premium tier gives you more features for collaborating with co-authors, tracking changes, and longer revision history, but I think it’s quite worth it.</p>
+<p>While Overleaf is great, I find myself often annoyed at how long it takes to recompile the document after making a change. I’ve noticed this to be more of a problem if the document has a lot of images in it (gg computer vision) and I’m not sure if this is a limitation with how I use Overleaf or if it’s a problem that others have with the platform as well. It seems that compiling is faster if I do it locally but then I lose the benefits of Overleaf’s collaboration features. I’m not sure if there’s a way to get the best of both worlds but I’ll update this section if I find a solution.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>personal</category>
+  <category>productivity</category>
+  <guid>https://www.saeejithnair.github.io/blog/posts/research_workflows/</guid>
+  <pubDate>Mon, 08 Jan 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://www.saeejithnair.github.io/blog/posts/research_workflows/thumbnail.jpg" medium="image" type="image/jpeg"/>
+</item>
+</channel>
+</rss>
