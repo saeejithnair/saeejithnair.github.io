@@ -2,15 +2,16 @@
   {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/posts/elastic_nerf/index.html",
       "/blog/posts/research_workflows/index.html"
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/projects/index.html",
     "items": []
   },
   {
-    "listing": "/projects/index.html",
+    "listing": "/index.html",
     "items": []
   }
 ]

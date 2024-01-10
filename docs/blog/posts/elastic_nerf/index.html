@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Saeejith Nair">
+<meta name="dcterms.date" content="2024-01-09">
 
-<title>Saeejith Nair - Streams of Consciousness</title>
+<title>Saeejith Nair - Elastic-NeRF</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,24 +25,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-JYHXLHGZEH"></script>
 
 <script type="text/javascript">
@@ -139,12 +109,14 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="../styles.css">
-<link rel="alternate" type="application/rss+xml" title="Saeejith Nair" href="index.xml" data-external="1"><meta property="og:title" content="Saeejith Nair - Streams of Consciousness">
-<meta property="og:image" content="https://www.saeejithnair.github.io/assets/posts/research_workflows/thumbnail.jpg">
+<link rel="stylesheet" href="../../../styles.css">
+<meta property="og:title" content="Saeejith Nair - Elastic-NeRF">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://www.saeejithnair.github.io/assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg">
 <meta property="og:site_name" content="Saeejith Nair">
-<meta name="twitter:title" content="Saeejith Nair - Streams of Consciousness">
-<meta name="twitter:image" content="https://www.saeejithnair.github.io/assets/posts/research_workflows/thumbnail.jpg">
+<meta name="twitter:title" content="Saeejith Nair - Elastic-NeRF">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://www.saeejithnair.github.io/assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -155,7 +127,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Saeejith Nair</span>
     </a>
   </div>
@@ -166,15 +138,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../projects"> 
+    <a class="nav-link" href="../../../projects"> 
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../blog"> 
+    <a class="nav-link" href="../../../blog"> 
 <span class="menu-text">Posts</span></a>
   </li>  
 </ul>
@@ -185,23 +157,28 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="nerf">nerf <span class="quarto-category-count">(1)</span></div><div class="category" data-category="personal">personal <span class="quarto-category-count">(1)</span></div><div class="category" data-category="productivity">productivity <span class="quarto-category-count">(1)</span></div><div class="category" data-category="research">research <span class="quarto-category-count">(1)</span></div><div class="category" data-category="wip">wip <span class="quarto-category-count">(1)</span></div></div></div>
+    </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Streams of Consciousness</h1>
-</div>
+<h1 class="title">Elastic-NeRF</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">nerf</div>
+    <div class="quarto-category">wip</div>
+    <div class="quarto-category">research</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta">
 
     <div>
     <div class="quarto-title-meta-heading">Author</div>
@@ -210,6 +187,12 @@ window.Quarto = {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 9, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -219,92 +202,19 @@ window.Quarto = {
 </header>
 
 
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="../../../assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg" class="img-fluid figure-img"></p>
+<figcaption>Elastic-NeRF applied to Nerfacc’s Instant-NGP implementation</figcaption>
+</figure>
+</div>
+<p>Prior to the holidays, I came across the <a href="https://arxiv.org/abs/2310.07707">MatFormer: Nested Transformer for Elastic Inference</a> paper and thought it was super cool. I’ve been working on Neural Radiance Fields lately and applying generative architecture search to the radiance field in order to make it more compact and efficient and we got some pretty nice speedups and memory savings just from shrinking the MLPs (see <a href="https://saeejithnair.github.io/NAS-NeRF/">NAS-NeRF</a>). People have tried doing elastic supernets in NAS before, but it’s never been quite so simple as the MatFormer approach afaik, and their accuracy-performance characterization was really interesting. I wanted to see if it would transfer over to the NeRF domain, so I tried it out and it works insanely well!</p>
+<p>Also the coolest part is that unlike MatFormer where they had to jointly optimize across all granularities on each forward pass, it turns out that for NeRFs you can just sample a single granularity and it works just as well! So training <span class="math inline">\(N\)</span> granularities can actually be faster than training the biggest granularity. I think this is super interesting and I’d like to characterize the training dynamics in more detail over the next few days.</p>
+<p>Unfortunately, all of my results are <a href="../../../blog/posts/research_workflows/#running-and-managing-experiments">currently locked on WandB</a> so I’m going to spend the rest of the week setting up a new locally hosted experiment tracking system so that I can share my results more easily (and then re-run all my key experiments). And once that’s set up, the idea I’d like to try going forward is to publish all of my experiments and incremental results publicly as I go along. I don’t expect anyone to read this, but I think once we finally get the project page up and running in a few weeks, I can link back to these posts and it’ll be a nice way to see the evolution of the project.</p>
 
 
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="nerf,wip,research" data-listing-date-sort="1704776400000" data-listing-file-modified-sort="1704867817625" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="310">
-<div class="thumbnail">
-<p><a href="../blog/posts/elastic_nerf/index.html" class="no-external"></a></p><a href="../blog/posts/elastic_nerf/index.html" class="no-external">
-<p><img src="../assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/elastic_nerf/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/elastic_nerf/index.html" class="no-external">Elastic-NeRF</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/elastic_nerf/index.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('nerf'); return false;">
-nerf
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('wip'); return false;">
-wip
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('research'); return false;">
-research
-</div>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/elastic_nerf/index.html" class="no-external">Prior to the holidays, I came across the MatFormer: Nested Transformer for Elastic Inference paper and thought it was super cool. I’ve been working on Neural Radiance Fields…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/elastic_nerf/index.html" class="no-external">
-<div class="listing-date">
-Jan 9, 2024
-</div>
-<div class="listing-author">
-Saeejith Nair
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="personal,productivity" data-listing-date-sort="1704690000000" data-listing-file-modified-sort="1704862956680" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2294">
-<div class="thumbnail">
-<p><a href="../blog/posts/research_workflows/index.html" class="no-external"></a></p><a href="../blog/posts/research_workflows/index.html" class="no-external">
-<p><img src="../assets/posts/research_workflows/thumbnail.jpg" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/research_workflows/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/research_workflows/index.html" class="no-external">Research Workflows</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/research_workflows/index.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('personal'); return false;">
-personal
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('productivity'); return false;">
-productivity
-</div>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/research_workflows/index.html" class="no-external">Research is a lot of fun but I’ve found that without the right tools, a lot of annoyingly small issues can add up and become a source of friction over time. In this post…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/research_workflows/index.html" class="no-external">
-<div class="listing-date">
-Jan 8, 2024
-</div>
-<div class="listing-author">
-Saeejith Nair
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -705,5 +615,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+<script src="../../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

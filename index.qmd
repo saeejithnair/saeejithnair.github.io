@@ -4,7 +4,7 @@ listing:
   - id: landing-projects
     contents: projects/projects.yaml
     type: grid
-    max-items: 4
+    max-items: 6
     grid-columns: 2
     sort:
       - "date desc"

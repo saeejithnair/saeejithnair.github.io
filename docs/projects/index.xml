@@ -10,7 +10,18 @@
 <atom:link href="https://www.saeejithnair.github.io/projects/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.4.537</generator>
-<lastBuildDate>Mon, 11 Dec 2023 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 09 Jan 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Elastic-NeRF</title>
+  <link>https://www.saeejithnair.github.io/</link>
+  <description>Making NeRFs even more compact and efficient using an elastic architecture (and no additional training cost)!</description>
+  <category>nerf</category>
+  <category>elastic</category>
+  <category>wip</category>
+  <guid>https://www.saeejithnair.github.io/</guid>
+  <pubDate>Tue, 09 Jan 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://www.saeejithnair.github.io/assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>NAS-NeRF</title>
   <link>https://www.saeejithnair.github.io/</link>
@@ -57,7 +68,7 @@
 <item>
   <title>Maple-Edge</title>
   <link>https://www.saeejithnair.github.io/</link>
-  <description>We propose MAPLE-Edge, an edge-device oriented latency predictor where we train a regression network on architecture-latency pairs in conjunction with a hardware-runtime descriptor to effectively estimate latency on a diverse pool of edge devices.</description>
+  <description>We propose MAPLE-Edge, an edge-device oriented latency predictor where we train a regression network on architecture-latency pairs in conjunction with a hardware-runtime descriptor to effectively estimate inference latency on a diverse pool of edge devices.</description>
   <category>edge-ml</category>
   <category>latency prediction</category>
   <category>cvpr workshop</category>

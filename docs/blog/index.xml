@@ -10,7 +10,36 @@
 <atom:link href="https://www.saeejithnair.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.4.537</generator>
-<lastBuildDate>Mon, 08 Jan 2024 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 09 Jan 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Elastic-NeRF</title>
+  <dc:creator>Saeejith Nair</dc:creator>
+  <link>https://www.saeejithnair.github.io/blog/posts/elastic_nerf/</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="https://www.saeejithnair.github.io/assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg" class="img-fluid figure-img"></p>
+<figcaption>Elastic-NeRF applied to Nerfacc’s Instant-NGP implementation</figcaption>
+</figure>
+</div>
+<p>Prior to the holidays, I came across the <a href="https://arxiv.org/abs/2310.07707">MatFormer: Nested Transformer for Elastic Inference</a> paper and thought it was super cool. I’ve been working on Neural Radiance Fields lately and applying generative architecture search to the radiance field in order to make it more compact and efficient and we got some pretty nice speedups and memory savings just from shrinking the MLPs (see <a href="https://saeejithnair.github.io/NAS-NeRF/">NAS-NeRF</a>). People have tried doing elastic supernets in NAS before, but it’s never been quite so simple as the MatFormer approach afaik, and their accuracy-performance characterization was really interesting. I wanted to see if it would transfer over to the NeRF domain, so I tried it out and it works insanely well!</p>
+<p>Also the coolest part is that unlike MatFormer where they had to jointly optimize across all granularities on each forward pass, it turns out that for NeRFs you can just sample a single granularity and it works just as well! So training <img src="https://latex.codecogs.com/png.latex?N"> granularities can actually be faster than training the biggest granularity. I think this is super interesting and I’d like to characterize the training dynamics in more detail over the next few days.</p>
+<p>Unfortunately, all of my results are <a href="../../../blog/posts/research_workflows/#running-and-managing-experiments">currently locked on WandB</a> so I’m going to spend the rest of the week setting up a new locally hosted experiment tracking system so that I can share my results more easily (and then re-run all my key experiments). And once that’s set up, the idea I’d like to try going forward is to publish all of my experiments and incremental results publicly as I go along. I don’t expect anyone to read this, but I think once we finally get the project page up and running in a few weeks, I can link back to these posts and it’ll be a nice way to see the evolution of the project.</p>
+
+
+
+ ]]></description>
+  <category>nerf</category>
+  <category>wip</category>
+  <category>research</category>
+  <guid>https://www.saeejithnair.github.io/blog/posts/elastic_nerf/</guid>
+  <pubDate>Tue, 09 Jan 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://www.saeejithnair.github.io/assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Research Workflows</title>
   <dc:creator>Saeejith Nair</dc:creator>

@@ -1,3 +1,11 @@
+- title: "Elastic-NeRF"
+  date: 2024-01-09
+  path: "/blog/posts/elastic_nerf"
+  image: "/assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg"
+  categories: [nerf, elastic, wip]
+  description: "Making NeRFs even more compact and efficient using an elastic architecture (and no additional training cost)!"
+
+
 - title: "NAS-NeRF"
   date: 2023-12-11
   path: "https://saeejithnair.github.io/NAS-NeRF/"
@@ -31,4 +39,4 @@
   image: "/assets/projects/maple_edge/maple_edge_overview_updated.png"
   date: 2022-06-01
   categories: [edge-ml, latency prediction, cvpr workshop]
-  description: "We propose MAPLE-Edge, an edge-device oriented latency predictor where we train a regression network on architecture-latency pairs in conjunction with a hardware-runtime descriptor to effectively estimate latency on a diverse pool of edge devices."
+  description: "We propose MAPLE-Edge, an edge-device oriented latency predictor where we train a regression network on architecture-latency pairs in conjunction with a hardware-runtime descriptor to effectively estimate inference latency on a diverse pool of edge devices."
