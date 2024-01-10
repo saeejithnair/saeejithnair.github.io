@@ -1,6 +1,7 @@
 project:
   type: website
   output-dir: docs
+  execute-dir: project
 
 website:
   title: "Saeejith Nair"
@@ -27,6 +28,7 @@ format:
     toc: true
     toc_depth: 3
     toc_float: true
+    smooth-scroll: true
     toc_smooth_scroll: true
     toc_highlight: true
     fig-align: left

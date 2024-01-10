@@ -1,7 +1,7 @@
 ---
 title: "Research Workflows"
 date: "2024-01-08"
-image: "thumbnail.jpg"
+image: "/assets/posts/research_workflows/thumbnail.jpg"
 categories: [personal, productivity]
 ---
 

@@ -1,0 +1,34 @@
+- title: "NAS-NeRF"
+  date: 2023-12-11
+  path: "https://saeejithnair.github.io/NAS-NeRF/"
+  image: "/assets/projects/nas_nerf/nas_nerf_horizontal.gif"
+  categories: [nerf, nas, neurips workshop]
+  description: "We introduce a generative neural architecture search strategy that generates compact, scene-specialized NeRF architectures."
+
+- title: "TurboViT"
+  date: 2023-08-22
+  path: "https://arxiv.org/abs/2308.11421"
+  image: "/assets/projects/turbo_vit/TurboViT.png"
+  categories: [vit, nas, neurips workshop]
+  description: "We explore the generation of fast vision transformer architecture designs via generative architecture search to achieve a strong balance between accuracy and architectural and computational efficiency."
+
+- title: "DARLEI"
+  path: https://saeejithnair.github.io/darlei/
+  image: "/assets/projects/darlei/DARLEIDemo4.gif"
+  date: 2023-12-08
+  categories: [RL, evolution, cvis]
+  description: "DARLEI combines evolutionary algorithms with parallelized reinforcement learning for efficiently training and evolving populations of UNIMAL agents."
+
+- title: "NV-Synth"
+  path: https://saeejithnair.github.io/nvsynth/
+  image: "/assets/projects/nvsynth/nvsynth_procedural_plating.gif"
+  date: 2023-12-11
+  categories: [synthetic data, neurips workshop]
+  description: "We introduce a large-scale synthetic food image dataset for nutrition estimation. NV-Synth contains 84,984 photorealistic meal images rendered from 7,082 dynamically plated 3D scenes."
+
+- title: "Maple-Edge"
+  path: https://openaccess.thecvf.com/content/CVPR2022W/EVW/html/Nair_MAPLE-Edge_A_Runtime_Latency_Predictor_for_Edge_Devices_CVPRW_2022_paper.html
+  image: "/assets/projects/maple_edge/maple_edge_overview_updated.png"
+  date: 2022-06-01
+  categories: [edge-ml, latency prediction, cvpr workshop]
+  description: "We propose MAPLE-Edge, an edge-device oriented latency predictor where we train a regression network on architecture-latency pairs in conjunction with a hardware-runtime descriptor to effectively estimate latency on a diverse pool of edge devices."

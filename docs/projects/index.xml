@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Saeejith Nair</title>
+<link>https://www.saeejithnair.github.io/projects/</link>
+<atom:link href="https://www.saeejithnair.github.io/projects/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.4.537</generator>
+<lastBuildDate>Mon, 11 Dec 2023 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>NAS-NeRF</title>
+  <link>https://www.saeejithnair.github.io/</link>
+  <description>We introduce a generative neural architecture search strategy that generates compact, scene-specialized NeRF architectures.</description>
+  <category>nerf</category>
+  <category>nas</category>
+  <category>neurips workshop</category>
+  <guid>https://www.saeejithnair.github.io/</guid>
+  <pubDate>Mon, 11 Dec 2023 05:00:00 GMT</pubDate>
+  <media:content url="https://www.saeejithnair.github.io/assets/projects/nas_nerf/nas_nerf_horizontal.gif" medium="image" type="image/gif"/>
+</item>
+<item>
+  <title>NV-Synth</title>
+  <link>https://www.saeejithnair.github.io/</link>
+  <description>We introduce a large-scale synthetic food image dataset for nutrition estimation. NV-Synth contains 84,984 photorealistic meal images rendered from 7,082 dynamically plated 3D scenes.</description>
+  <category>synthetic data</category>
+  <category>neurips workshop</category>
+  <guid>https://www.saeejithnair.github.io/</guid>
+  <pubDate>Mon, 11 Dec 2023 05:00:00 GMT</pubDate>
+  <media:content url="https://www.saeejithnair.github.io/assets/projects/nvsynth/nvsynth_procedural_plating.gif" medium="image" type="image/gif"/>
+</item>
+<item>
+  <title>DARLEI</title>
+  <link>https://www.saeejithnair.github.io/</link>
+  <description>DARLEI combines evolutionary algorithms with parallelized reinforcement learning for efficiently training and evolving populations of UNIMAL agents.</description>
+  <category>RL</category>
+  <category>evolution</category>
+  <category>cvis</category>
+  <guid>https://www.saeejithnair.github.io/</guid>
+  <pubDate>Fri, 08 Dec 2023 05:00:00 GMT</pubDate>
+  <media:content url="https://www.saeejithnair.github.io/assets/projects/darlei/DARLEIDemo4.gif" medium="image" type="image/gif"/>
+</item>
+<item>
+  <title>TurboViT</title>
+  <link>https://www.saeejithnair.github.io/</link>
+  <description>We explore the generation of fast vision transformer architecture designs via generative architecture search to achieve a strong balance between accuracy and architectural and computational efficiency.</description>
+  <category>vit</category>
+  <category>nas</category>
+  <category>neurips workshop</category>
+  <guid>https://www.saeejithnair.github.io/</guid>
+  <pubDate>Tue, 22 Aug 2023 04:00:00 GMT</pubDate>
+  <media:content url="https://www.saeejithnair.github.io/assets/projects/turbo_vit/TurboViT.png" medium="image" type="image/png" height="40" width="144"/>
+</item>
+<item>
+  <title>Maple-Edge</title>
+  <link>https://www.saeejithnair.github.io/</link>
+  <description>We propose MAPLE-Edge, an edge-device oriented latency predictor where we train a regression network on architecture-latency pairs in conjunction with a hardware-runtime descriptor to effectively estimate latency on a diverse pool of edge devices.</description>
+  <category>edge-ml</category>
+  <category>latency prediction</category>
+  <category>cvpr workshop</category>
+  <guid>https://www.saeejithnair.github.io/</guid>
+  <pubDate>Wed, 01 Jun 2022 04:00:00 GMT</pubDate>
+  <media:content url="https://www.saeejithnair.github.io/assets/projects/maple_edge/maple_edge_overview_updated.png" medium="image" type="image/png" height="76" width="144"/>
+</item>
+</channel>
+</rss>

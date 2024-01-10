@@ -1,33 +1,17 @@
 ---
 title: "Selected Projects"
-contents: .
+listing:
+    - id: projects
+      contents: 
+        - projects.yaml
+      type: default
+      sort: "date desc"
+      categories: true
+      sort-ui: true
+      filter-ui: true
+      feed: true
+page-layout: full
+title-block-banner: false
+
 ---
 
-Sorry, this page is currently under construction! 👷  In the meantime, please check out my [GitHub](https://github.com/saeejithnair) page.
-
-
-## NAS-NeRF
-[**NAS-NeRF**](https://saeejithnair.github.io/NAS-NeRF/): We introduce a generative neural architecture search strategy that generates compact, scene-specialized NeRF architectures by balancing architecture complexity and target synthesis quality metrics. Our method incorporates constraints on target metrics and budgets to guide the search towards architectures tailored for each scene.
-[More about NAS-NeRF](https://saeejithnair.github.io/NAS-NeRF/)
-![NAS-NeRF Thumbnail](nas_nerf_horizontal.gif)  
-
-## NV-Synth
-[**NV-Synth**](https://saeejithnair.github.io/nvsynth/): NutritionVerse-Synth, an open-access synthetically generated 2D food scene dataset, is a valuable resource for dietary intake estimation and food-related computer vision tasks. [More about NV-Synth](https://saeejithnair.github.io/nvsynth/)
-
-| **NV-Synth Dynamic Plating** | **NV-Synth Procedural Plating** | 
-|:---:|:---:|
-| ![NV-Synth Dynamic Plating](nvsynth_dynamic_plating.gif) | ![NV-Synth Procedural Plating](nvsynth_procedural_plating.gif) | 
-
-
-## DARLEI
-![DARLEI Thumbnail]()  
-**DARLEI**: Deep Accelerated Reinforcement Learning with Evolutionary Intelligence combines evolutionary algorithms with parallelized reinforcement learning for efficiently training and evolving populations of UNIMAL agents. [More about DARLEI](https://saeejithnair.github.io/darlei/)
-
-
-## TurboViT
-![TurboViT Thumbnail](TurboVit.png)  
-**TurboViT**: Generating Fast Vision Transformers via Generative Architecture Search. [More about TurboViT](https://arxiv.org/abs/2308.11421)
-
-## Maple-Edge
-![Maple-Edge Thumbnail](maple_edge_overview_updated.png)  
-**Maple-Edge**: A runtime latency predictor for edge devices, focusing on improving the performance of AI applications in resource-constrained environments.  [More about Maple-Edge](https://openaccess.thecvf.com/content/CVPR2022W/EVW/html/Nair_MAPLE-Edge_A_Runtime_Latency_Predictor_for_Edge_Devices_CVPRW_2022_paper.html)

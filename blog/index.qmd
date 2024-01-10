@@ -3,7 +3,6 @@ title: "Streams of Consciousness"
 listing:
   contents:
     - posts
-    - projects.yaml
   sort: "date desc"
   type: default
   categories: true

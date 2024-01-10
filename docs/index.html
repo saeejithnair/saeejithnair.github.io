@@ -30,6 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -65,6 +67,35 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-landing-projects .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-title','listing-date','listing-image','listing-categories','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-title","listing-date","listing-image","listing-categories","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-landing-projects'] = new List('listing-landing-projects', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-JYHXLHGZEH"></script>
 
 <script type="text/javascript">
@@ -74,16 +105,46 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-JYHXLHGZEH', { 'anonymize_ip': true});
 </script>
+<style>html{ scroll-behavior: smooth; }</style>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 <meta property="og:title" content="Saeejith Nair">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://www.saeejithnair.github.io/img/Neurips_23_headshot.jpg">
+<meta property="og:image" content="https://www.saeejithnair.github.io/assets/Neurips_23_headshot.jpg">
 <meta property="og:site_name" content="Saeejith Nair">
 <meta name="twitter:title" content="Saeejith Nair">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://www.saeejithnair.github.io/img/Neurips_23_headshot.jpg">
+<meta name="twitter:image" content="https://www.saeejithnair.github.io/assets/Neurips_23_headshot.jpg">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -132,7 +193,7 @@ gtag('config', 'G-JYHXLHGZEH', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
   <ul>
   <li><a href="#bio" id="toc-bio" class="nav-link active" data-scroll-target="#bio">Bio</a></li>
-  <li><a href="#projects-coming-soon" id="toc-projects-coming-soon" class="nav-link" data-scroll-target="#projects-coming-soon">Projects (Coming soon!)</a></li>
+  <li><a href="#selected-projects" id="toc-selected-projects" class="nav-link" data-scroll-target="#selected-projects">Selected Projects</a></li>
   <li><a href="#industry-experience" id="toc-industry-experience" class="nav-link" data-scroll-target="#industry-experience">Industry Experience</a>
   <ul class="collapse">
   <li><a href="#nuro.ai-software-engineering-intern" id="toc-nuro.ai-software-engineering-intern" class="nav-link" data-scroll-target="#nuro.ai-software-engineering-intern">Nuro.ai | <em>Software Engineering Intern</em></a></li>
@@ -152,7 +213,7 @@ gtag('config', 'G-JYHXLHGZEH', { 'anonymize_ip': true});
 <!-- main -->
 <div class="quarto-about-trestles content column-page-left">
   <div class="about-entity">
-    <img src="img/Neurips_23_headshot.jpg" class="about-image
+    <img src="assets/Neurips_23_headshot.jpg" class="about-image
   rounded " style="width: 20em;">
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -188,53 +249,150 @@ gtag('config', 'G-JYHXLHGZEH', { 'anonymize_ip': true});
 
 <section id="bio" class="level2">
 <h2 data-anchor-id="bio">Bio</h2>
-<p>I’m currently an MASc candidate at UWaterloo’s Vision and Image Processing Lab, advised by Prof.&nbsp;<a href="https://www.eng.uwaterloo.ca/~a28wong/index.html">Alexander Wong</a> and Prof.&nbsp;<a href="https://vip.uwaterloo.ca/m-shafiee/">Javad Shafiee</a>. My research has focused on projects at the intersection of <strong>efficient ML</strong> (specifically applying neural architecture search to NeRFs and vision transformers), <strong>embedded systems</strong> (latency prediction for on-device inference), and <strong>robotics</strong> (building simulation pipelines for synthetic data generation and training embodied morphologies).</p>
-<p>Though my projects span diverse areas, I view them as interconnected elements, each contributing uniquely to the overarching goal of creating robots endowed with the capability for open-ended learning. However, while today’s simulators are valuable for training tomorrow’s robots, I believe that future agents will require fundamentally different neural architectures to achieve the level of learning and power efficiency seen in biological systems. I’m interested in using physics-based simulations as a testbed to develop agents that can reason in an open-ended manner with the aim of applying those insights to build systems capable of open-ended neural architecture generation.</p>
-<p>I previously graduated from the University of Waterloo with a BASc in Mechatronics Engineering with an Option in Artificial Intelligence. As an undergraduate, I’ve interned as a software engineer across the full systems stack from sensor processing and communications infrastructure on self-driving cars, simulators for robot grasping, real-time video analytics applications for embedded microcontrollers, safety-critical bootloader firmware for aerospace products, silicon validation for AI accelerators, and web development for e-commerce.</p>
+<p>I’m currently an MASc candidate in Systems Design Engineering at UWaterloo’s Vision and Image Processing Lab, advised by Prof.&nbsp;<a href="https://www.eng.uwaterloo.ca/~a28wong/index.html">Alexander Wong</a> and Prof.&nbsp;<a href="https://vip.uwaterloo.ca/m-shafiee/">Javad Shafiee</a>. My research has focused on projects at the intersection of <strong>efficient ML</strong> (specifically applying neural architecture search to NeRFs and vision transformers), <strong>embedded systems</strong> (latency prediction for on-device inference), and <strong>robotics</strong> (building simulation pipelines for synthetic data generation and training embodied morphologies).</p>
+<p>I previously graduated from the University of Waterloo with a BASc in Mechatronics Engineering with an Option in Artificial Intelligence. As an undergraduate, I’ve interned as a software engineer across the full systems stack including sensor processing and communications infrastructure on self-driving cars, simulators for robot grasping, real-time video analytics applications for embedded microcontrollers, safety-critical bootloader firmware for aerospace products, silicon validation for AI accelerators, and web development for e-commerce.</p>
+<p><strong>I’m interested in developing robots that can learn to interact with the world in an open-ended manner.</strong> I’m a big proponent of using simulations for training embodied agents, and in the near-term I see physics-based virtual environments as rich data sources, ideal for bootstrapping agents with the ability to handle complex embodied tasks. However, to reach a level of learning and power efficiency comparable to biological systems, I believe we must eventually reimagine our current approaches to agent learning and adopt a paradigm in which the neural architecture itself is generated. I aim to draw inspiration from pioneering systems exhibiting early signs of open-ended learning in simulations — studying both the emergent behaviours and the methods enabling them. By harnessing these insights, I seek to develop frameworks that can leverage open-ended creativity and apply it to not just find efficient architectures in fixed search spaces, but to generate novel, previously unexplored classes of architectures.</p>
 <p>I take pride in being a strong generalist and enjoy working across roles and disciplines. I’m looking for new opportunities to build the next generation (and beyond) of robotics. If you’re working on something interesting, or want to learn more, I’d love to chat!</p>
 </section>
-<section id="projects-coming-soon" class="level2">
-<h2 data-anchor-id="projects-coming-soon">Projects (Coming soon!)</h2>
-<p>Check out my dedicated <a href="projects/">projects page</a>!</p>
-<table class="table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;"><strong>NAS-NeRF</strong></th>
-<th style="text-align: center;"><strong>NV-Synth</strong></th>
-<th style="text-align: center;"><strong>Elastic-NeRF</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><img src="projects/nas_nerf_horizontal.gif" class="img-fluid" alt="NAS-NeRF"></td>
-<td style="text-align: center;"><img src="projects/nvsynth_procedural_plating.gif" class="img-fluid" alt="NV-Synth"></td>
-<td style="text-align: center;"><img src="projects/nas_nerf_horizontal.gif" class="img-fluid" alt="Elastic-NeRF"></td>
-</tr>
-</tbody>
-</table>
-<table class="table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;"><strong>DARLEI</strong></th>
-<th style="text-align: center;"><strong>TurboViT</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><img src="projects/nas_nerf_horizontal.gif" class="img-fluid" alt="DARLEI"></td>
-<td style="text-align: center;"><img src="projects/nas_nerf_horizontal.gif" class="img-fluid" alt="TurboViT"></td>
-</tr>
-</tbody>
-</table>
+<section id="selected-projects" class="level2">
+<h2 data-anchor-id="selected-projects">Selected Projects</h2>
+<p>Check out my <a href="projects/">projects page</a> for more!</p>
+<div id="listing-landing-projects" class="quarto-listing quarto-listing-container-grid">
+<div class="list grid quarto-listing-cols-2">
+<div class="g-col-1" data-index="0" data-categories="nerf,nas,neurips workshop" data-listing-date-sort="1702270800000">
+<a href="https://saeejithnair.github.io/NAS-NeRF/" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./assets/projects/nas_nerf/nas_nerf_horizontal.gif" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+NAS-NeRF
+</h5>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('nerf'); return false;">
+nerf
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('nas'); return false;">
+nas
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('neurips workshop'); return false;">
+neurips workshop
+</div>
+</div>
+<div class="card-text listing-description">
+We introduce a generative neural architecture search strategy that generates compact, scene-specialized NeRF architectures.
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+Dec 11, 2023
+</div>
+</div>
+</div>
+</div>
+</a>
+</div>
+<div class="g-col-1" data-index="1" data-categories="synthetic data,neurips workshop" data-listing-date-sort="1702270800000">
+<a href="https://saeejithnair.github.io/nvsynth/" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./assets/projects/nvsynth/nvsynth_procedural_plating.gif" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+NV-Synth
+</h5>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('synthetic data'); return false;">
+synthetic data
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('neurips workshop'); return false;">
+neurips workshop
+</div>
+</div>
+<div class="card-text listing-description">
+We introduce a large-scale synthetic food image dataset for nutrition estimation. NV-Synth contains 84,984 photorealistic meal images rendered from 7,082 dynamically plated…
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+Dec 11, 2023
+</div>
+</div>
+</div>
+</div>
+</a>
+</div>
+<div class="g-col-1" data-index="2" data-categories="RL,evolution,cvis" data-listing-date-sort="1702011600000">
+<a href="https://saeejithnair.github.io/darlei/" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./assets/projects/darlei/DARLEIDemo4.gif" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+DARLEI
+</h5>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('RL'); return false;">
+RL
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('evolution'); return false;">
+evolution
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('cvis'); return false;">
+cvis
+</div>
+</div>
+<div class="card-text listing-description">
+DARLEI combines evolutionary algorithms with parallelized reinforcement learning for efficiently training and evolving populations of UNIMAL agents.
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+Dec 8, 2023
+</div>
+</div>
+</div>
+</div>
+</a>
+</div>
+<div class="g-col-1" data-index="3" data-categories="vit,nas,neurips workshop" data-listing-date-sort="1692676800000">
+<a href="https://arxiv.org/abs/2308.11421" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./assets/projects/turbo_vit/TurboViT.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+TurboViT
+</h5>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('vit'); return false;">
+vit
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('nas'); return false;">
+nas
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('neurips workshop'); return false;">
+neurips workshop
+</div>
+</div>
+<div class="card-text listing-description">
+We explore the generation of fast vision transformer architecture designs via generative architecture search to achieve a strong balance between accuracy and architectural…
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+Aug 22, 2023
+</div>
+</div>
+</div>
+</div>
+</a>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div>
 </section>
 <section id="industry-experience" class="level2">
 <h2 data-anchor-id="industry-experience">Industry Experience</h2>
@@ -284,7 +442,7 @@ gtag('config', 'G-JYHXLHGZEH', { 'anonymize_ip': true});
 <h3 data-anchor-id="nxp-semiconductors-ai-vision-processor-system-level-design-intern">NXP Semiconductors | <em>AI &amp; Vision Processor System Level Design Intern</em></h3>
 <section id="ottawa-on-jan---apr-2018" class="level5">
 <h5 data-anchor-id="ottawa-on-jan---apr-2018">Ottawa, ON (Jan - Apr, 2018)</h5>
-<p>Developed an internal tool to simulate DMA performance of their accelerated vision processor for ADAS applications. Analyzed results and waveforms to identify bugs in SystemVerilog RTL resulting in 2.73x increase in DMA bandwidth.</p>
+<p>Developed an internal tool to simulate DMA performance of NXP’s accelerated vision processor for ADAS applications. Analyzed results and waveforms to identify bugs in SystemVerilog RTL resulting in 2.73x increase in DMA bandwidth.</p>
 </section>
 </section>
 <section id="home-depot-canada-junior-front-end-web-developer" class="level3">
@@ -712,4 +870,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

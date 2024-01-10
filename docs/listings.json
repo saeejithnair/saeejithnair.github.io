@@ -4,5 +4,13 @@
     "items": [
       "/blog/posts/research_workflows/index.html"
     ]
+  },
+  {
+    "listing": "/index.html",
+    "items": []
+  },
+  {
+    "listing": "/projects/index.html",
+    "items": []
   }
 ]
