@@ -1,0 +1,12 @@
+{
+  "hash": "d3cc9a4212bdf2ff347fa3dc5b7ef7f8",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: Elastic-NeRF\ndescription: Making NeRFs even smaller and faster\ndate: '2024-01-09'\nimage: /assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg\ncategories:\n  - nerf\n  - wip\n  - research\nformat:\n  html:\n    toc: true\n    page-layout: article\n    code-line-numbers: true\n    smooth-scroll: true\nhighlight-style: github\ncrossref:\n  chapters: true\nnumber-sections: true\n---\n\n![Elastic-NeRF applied to Nerfacc's Instant-NGP implementation](/assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg)\n\n\nPrior to the holidays, I came across the [MatFormer: Nested Transformer for Elastic Inference](https://arxiv.org/abs/2310.07707) paper and thought it was super cool. I've been working on Neural Radiance Fields lately and applying generative architecture search to the radiance field in order to make it more compact and efficient and we got some pretty nice speedups and memory savings just from shrinking the MLPs (see [NAS-NeRF](https://saeejithnair.github.io/NAS-NeRF/)). People have tried doing elastic supernets in NAS before, but it's never been quite so simple as the MatFormer approach afaik, and their accuracy-performance characterization was really interesting. I wanted to see if it would transfer over to the NeRF domain, so I tried it out and it works insanely well!\n\nAlso the coolest part is that unlike MatFormer where they had to jointly optimize across all granularities on each forward pass, it turns out that for NeRFs you can just sample a single granularity and it works just as well! So training $N$ granularities can actually be faster than training the biggest granularity. I think this is super interesting and I'd like to characterize the training dynamics in more detail over the next few days.\n\nUnfortunately, all of my results are [currently locked on WandB](/blog/posts/research_workflows/#running-and-managing-experiments) but can't wait to share more once I have new results!\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
