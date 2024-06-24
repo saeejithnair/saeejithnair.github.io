@@ -10,7 +10,6 @@ format:
     page-layout: article
     code-line-numbers: true
     smooth-scroll: true
-jupyter: python3
 highlight-style: github
 crossref:
   chapters: true
@@ -21,7 +20,6 @@ number-sections: true
 
 Prior to the holidays, I came across the [MatFormer: Nested Transformer for Elastic Inference](https://arxiv.org/abs/2310.07707) paper and thought it was super cool. I've been working on Neural Radiance Fields lately and applying generative architecture search to the radiance field in order to make it more compact and efficient and we got some pretty nice speedups and memory savings just from shrinking the MLPs (see [NAS-NeRF](https://saeejithnair.github.io/NAS-NeRF/)). People have tried doing elastic supernets in NAS before, but it's never been quite so simple as the MatFormer approach afaik, and their accuracy-performance characterization was really interesting. I wanted to see if it would transfer over to the NeRF domain, so I tried it out and it works insanely well!
 
-Also the coolest part is that unlike MatFormer where they had to jointly optimize across all granularities on each forward pass, it turns out that for NeRFs you can just sample a single granularity and it works just as well! So training $N$ granularities can actually be faster than training the biggest granularity. I think this is super interesting and I'd like to characterize the training dynamics in more detail over the next few days.
+Also the coolest part is that unlike MatFormer where they had to jointly optimize across all granularities on each forward pass, it turns out that for NeRFs you can just sample a single granularity and it works just as well! So training $N$ granularities can actually be faster than training the biggest granularity. 
 
-Unfortunately, all of my results are [currently locked on WandB](/blog/posts/research_workflows/#running-and-managing-experiments) but can't wait to share more once I have new results!
-
+Time to run more experiments and characterize the training dynamics...
