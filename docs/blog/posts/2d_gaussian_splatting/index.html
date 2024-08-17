@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Saeejith Nair">
+<meta name="dcterms.date" content="2024-07-31">
 
-<title>Saeejith Nair - Streams of Consciousness</title>
+<title>Saeejith Nair - Exploring 2D Gaussian Splatting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,24 +25,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-JYHXLHGZEH"></script>
 
 <script type="text/javascript">
@@ -109,42 +79,15 @@ gtag('config', 'G-JYHXLHGZEH', { 'anonymize_ip': true});
 </script>
 <style>html{ scroll-behavior: smooth; }</style>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="../styles.css">
-<link rel="alternate" type="application/rss+xml" title="Saeejith Nair" href="index.xml" data-external="1"><meta property="og:title" content="Saeejith Nair - Streams of Consciousness">
-<meta property="og:image" content="https://www.saeejithnair.github.io/assets/posts/research_workflows/thumbnail.jpg">
+<link rel="stylesheet" href="../../../styles.css">
+<meta property="og:title" content="Saeejith Nair - Exploring 2D Gaussian Splatting">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://www.saeejithnair.github.io/assets/posts/in_progress.jpg">
 <meta property="og:site_name" content="Saeejith Nair">
-<meta name="twitter:title" content="Saeejith Nair - Streams of Consciousness">
-<meta name="twitter:image" content="https://www.saeejithnair.github.io/assets/posts/research_workflows/thumbnail.jpg">
+<meta name="twitter:title" content="Saeejith Nair - Exploring 2D Gaussian Splatting">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://www.saeejithnair.github.io/assets/posts/in_progress.jpg">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -155,7 +98,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Saeejith Nair</span>
     </a>
   </div>
@@ -166,15 +109,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../projects"> 
+    <a class="nav-link" href="../../../projects"> 
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../blog"> 
+    <a class="nav-link" href="../../../blog"> 
 <span class="menu-text">Posts</span></a>
   </li>  
 </ul>
@@ -185,23 +128,28 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="gaussian_splatting">gaussian_splatting <span class="quarto-category-count">(2)</span></div><div class="category" data-category="nerf">nerf <span class="quarto-category-count">(2)</span></div><div class="category" data-category="personal">personal <span class="quarto-category-count">(1)</span></div><div class="category" data-category="productivity">productivity <span class="quarto-category-count">(1)</span></div><div class="category" data-category="research">research <span class="quarto-category-count">(2)</span></div><div class="category" data-category="wip">wip <span class="quarto-category-count">(3)</span></div></div></div>
+    </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Streams of Consciousness</h1>
-</div>
+<h1 class="title">Exploring 2D Gaussian Splatting</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">gaussian_splatting</div>
+    <div class="quarto-category">research</div>
+    <div class="quarto-category">wip</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta">
 
     <div>
     <div class="quarto-title-meta-heading">Author</div>
@@ -210,6 +158,12 @@ window.Quarto = {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 31, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -219,77 +173,7 @@ window.Quarto = {
 </header>
 
 
-
-
-
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="nerf,wip,gaussian_splatting" data-listing-date-sort="1722916800000" data-listing-file-modified-sort="1723005054287" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2870">
-<div class="thumbnail">
-<p><a href="../blog/posts/garfield/index.html" class="no-external"></a></p><a href="../blog/posts/garfield/index.html" class="no-external">
-<p><img src="../assets/posts/in_progress.jpg" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/garfield/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/garfield/index.html" class="no-external">GARField: Group Anything with Radiance Fields</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/garfield/index.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('nerf'); return false;">
-nerf
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('wip'); return false;">
-wip
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('gaussian_splatting'); return false;">
-gaussian_splatting
-</div>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/garfield/index.html" class="no-external">Notes on the GARField paper.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/garfield/index.html" class="no-external">
-<div class="listing-date">
-Aug 6, 2024
-</div>
-<div class="listing-author">
-Saeejith Nair
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="gaussian_splatting,research,wip" data-listing-date-sort="1722398400000" data-listing-file-modified-sort="1723005060529" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2485">
-<div class="thumbnail">
-<p><a href="../blog/posts/2d_gaussian_splatting/index.html" class="no-external"></a></p><a href="../blog/posts/2d_gaussian_splatting/index.html" class="no-external">
-<p><img src="../assets/posts/in_progress.jpg" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/2d_gaussian_splatting/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/2d_gaussian_splatting/index.html" class="no-external">Exploring 2D Gaussian Splatting</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/2d_gaussian_splatting/index.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('gaussian_splatting'); return false;">
-gaussian_splatting
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('research'); return false;">
-research
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('wip'); return false;">
-wip
-</div>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/2d_gaussian_splatting/index.html" class="no-external">Coming soon… <!-- # 2D Gaussian Splatting: A Deep Dive into the Core Function
+<p>Coming soon… <!-- # 2D Gaussian Splatting: A Deep Dive into the Core Function
 
 In this post, we're going to dissect the `generate_2D_gaussian_splatting` function, which is at the heart of a 2D Gaussian Splatting implementation. We'll go through each part of the function, explain what it does, and delve into the mathematics behind it.
 
@@ -328,12 +212,12 @@ Here, we're constructing the covariance matrix for each Gaussian in the batch. T
 
 For a 2D Gaussian, the covariance matrix $\Sigma$ is given by:
 
-$
+$$
 \Sigma = \begin{bmatrix} 
 \sigma_x^2 & \rho\sigma_x\sigma_y \\
 \rho\sigma_x\sigma_y & \sigma_y^2 
 \end{bmatrix}
-$
+$$
 
 Where:
 - $\sigma_x$ and $\sigma_y$ are the standard deviations in x and y directions, controlling the spread of the Gaussian.
@@ -373,12 +257,12 @@ We calculate the inverse of the covariance matrix, which we'll need later for th
 
 For a 2x2 matrix, the inverse can be calculated analytically:
 
-$
+$$
 \Sigma^{-1} = \frac{1}{\det(\Sigma)} \begin{bmatrix} 
 \sigma_y^2 & -\rho\sigma_x\sigma_y \\
 -\rho\sigma_x\sigma_y & \sigma_x^2 
 \end{bmatrix}
-$
+$$
 
 The inverse covariance matrix is used in the exponent of the Gaussian function and determines the shape and orientation of the level curves of the distribution.
 
@@ -415,9 +299,9 @@ kernel = torch.exp(z) / (2 * torch.tensor(np.pi, device=device) * torch.sqrt(tor
 
 This is where we calculate the actual Gaussian function. The multivariate Gaussian probability density function is given by:
 
-$
+$$
 f(x,y) = \frac{1}{2\pi|\Sigma|^{1/2}} \exp\left(-\frac{1}{2} [x \quad y] \Sigma^{-1} \begin{bmatrix} x \\ y \end{bmatrix}\right)
-$
+$$
 
 Where $|\Sigma|$ is the determinant of the covariance matrix.
 
@@ -479,21 +363,21 @@ In this section, we'll explore how the Gaussian kernels are positioned in the im
 
 An affine transformation is a linear mapping method that preserves points, straight lines, and planes. In 2D, it can be represented as a 2x3 matrix:
 
-$
+$$
 \begin{bmatrix} 
 a & b & t_x \\
 c & d & t_y
 \end{bmatrix}
-$
+$$
 
 This matrix can represent scaling, rotation, shearing, and translation. In our case, we're primarily interested in translation, so our matrix simplifies to:
 
-$
+$$
 \begin{bmatrix} 
 1 & 0 & t_x \\
 0 & 1 & t_y
 \end{bmatrix}
-$
+$$
 
 Where $(t_x, t_y)$ represents the translation in x and y directions.
 
@@ -647,7 +531,7 @@ The `align_corners=True` parameter is a technical detail that affects how the ex
 
 What's happening here can be thought of as a coordinate transformation. Let's say we have a point $(x, y)$ in our original kernel. The affine transformation applies as follows:
 
-$
+$$
 \begin{bmatrix} 
 x' \\
 y' \\
@@ -663,13 +547,13 @@ x \\
 y \\
 1
 \end{bmatrix}
-$
+$$
 
 Resulting in:
-$
+$$
 x' = x + t_x \\
 y' = y + t_y
-$
+$$
 
 This effectively moves each point in our kernel by $(t_x, t_y)$, which are the coordinates specified in `coords`.
 
@@ -703,100 +587,11 @@ This function is the core of 2D Gaussian Splatting. It takes a set of Gaussians 
 
 The power of this approach lies in its ability to represent complex images with a relatively small number of parameters (position, shape, and color of each Gaussian). By optimizing these parameters, we can create efficient and flexible representations of images.
 
-In a full Gaussian Splatting system, this function would be used within a larger optimization loop that adjusts the Gaussian parameters to best represent a target image. The optimization process might also involve adding or removing Gaussians as needed to improve the representation. --></a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/2d_gaussian_splatting/index.html" class="no-external">
-<div class="listing-date">
-Jul 31, 2024
-</div>
-<div class="listing-author">
-Saeejith Nair
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="nerf,wip,research" data-listing-date-sort="1704776400000" data-listing-file-modified-sort="1719209540755" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="182">
-<div class="thumbnail">
-<p><a href="../blog/posts/elastic_nerf/index.html" class="no-external"></a></p><a href="../blog/posts/elastic_nerf/index.html" class="no-external">
-<p><img src="../assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/elastic_nerf/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/elastic_nerf/index.html" class="no-external">Elastic-NeRF</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/elastic_nerf/index.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('nerf'); return false;">
-nerf
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('wip'); return false;">
-wip
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('research'); return false;">
-research
-</div>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/elastic_nerf/index.html" class="no-external">Making NeRFs even smaller and faster</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/elastic_nerf/index.html" class="no-external">
-<div class="listing-date">
-Jan 9, 2024
-</div>
-<div class="listing-author">
-Saeejith Nair
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="personal,productivity" data-listing-date-sort="1704690000000" data-listing-file-modified-sort="1719209049288" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2288">
-<div class="thumbnail">
-<p><a href="../blog/posts/research_workflows/index.html" class="no-external"></a></p><a href="../blog/posts/research_workflows/index.html" class="no-external">
-<p><img src="../assets/posts/research_workflows/thumbnail.jpg" class="thumbnail-image"></p>
-</a><p><a href="../blog/posts/research_workflows/index.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/posts/research_workflows/index.html" class="no-external">Research Workflows</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/posts/research_workflows/index.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('personal'); return false;">
-personal
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('productivity'); return false;">
-productivity
-</div>
-</div>
-<div class="listing-description">
-<a href="../blog/posts/research_workflows/index.html" class="no-external">Research is fun but without the right tools, a lot of annoyingly small issues can add up and become a source of friction over time. In this post, I’m going to try and…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/posts/research_workflows/index.html" class="no-external">
-<div class="listing-date">
-Jan 8, 2024
-</div>
-<div class="listing-author">
-Saeejith Nair
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+In a full Gaussian Splatting system, this function would be used within a larger optimization loop that adjusts the Gaussian parameters to best represent a target image. The optimization process might also involve adding or removing Gaussians as needed to improve the representation. --></p>
+
+
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1197,5 +992,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+<script src="../../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.537">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Saeejith Nair">
+<meta name="dcterms.date" content="2024-08-06">
+<meta name="description" content="Notes on the GARField paper.">
+
+<title>Saeejith Nair - GARField: Group Anything with Radiance Fields</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-JYHXLHGZEH"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-JYHXLHGZEH', { 'anonymize_ip': true});
+</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+<meta property="og:title" content="Saeejith Nair - GARField: Group Anything with Radiance Fields">
+<meta property="og:description" content="Notes on the GARField paper.">
+<meta property="og:image" content="https://www.saeejithnair.github.io/assets/posts/in_progress.jpg">
+<meta property="og:site_name" content="Saeejith Nair">
+<meta name="twitter:title" content="Saeejith Nair - GARField: Group Anything with Radiance Fields">
+<meta name="twitter:description" content="Notes on the GARField paper.">
+<meta name="twitter:image" content="https://www.saeejithnair.github.io/assets/posts/in_progress.jpg">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Saeejith Nair</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../projects"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../blog"> 
+<span class="menu-text">Posts</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#pipeline" id="toc-pipeline" class="nav-link active" data-scroll-target="#pipeline">Pipeline</a>
+  <ul class="collapse">
+  <li><a href="#mask-extraction" id="toc-mask-extraction" class="nav-link" data-scroll-target="#mask-extraction">Mask Extraction</a></li>
+  <li><a href="#scale-estimation" id="toc-scale-estimation" class="nav-link" data-scroll-target="#scale-estimation">Scale Estimation</a></li>
+  <li><a href="#scale-conditioned-affinity-field" id="toc-scale-conditioned-affinity-field" class="nav-link" data-scroll-target="#scale-conditioned-affinity-field">Scale-Conditioned Affinity Field</a></li>
+  <li><a href="#contrastive-supervision" id="toc-contrastive-supervision" class="nav-link" data-scroll-target="#contrastive-supervision">Contrastive Supervision</a></li>
+  <li><a href="#continuous-scale-supervision" id="toc-continuous-scale-supervision" class="nav-link" data-scroll-target="#continuous-scale-supervision">Continuous scale supervision</a></li>
+  <li><a href="#containment-auxiliary-loss" id="toc-containment-auxiliary-loss" class="nav-link" data-scroll-target="#containment-auxiliary-loss">Containment Auxiliary Loss</a></li>
+  </ul></li>
+  <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">Training</a>
+  <ul class="collapse">
+  <li><a href="#ray-and-mask-sampling" id="toc-ray-and-mask-sampling" class="nav-link" data-scroll-target="#ray-and-mask-sampling">Ray and Mask Sampling</a></li>
+  </ul></li>
+  <li><a href="#hierarchical-decomposition" id="toc-hierarchical-decomposition" class="nav-link" data-scroll-target="#hierarchical-decomposition">Hierarchical Decomposition</a>
+  <ul class="collapse">
+  <li><a href="#process-overview" id="toc-process-overview" class="nav-link" data-scroll-target="#process-overview">Process Overview</a></li>
+  </ul></li>
+  <li><a href="#experiments" id="toc-experiments" class="nav-link" data-scroll-target="#experiments">Experiments</a>
+  <ul class="collapse">
+  <li><a href="#qualitative-scene-decomposition" id="toc-qualitative-scene-decomposition" class="nav-link" data-scroll-target="#qualitative-scene-decomposition">Qualitative Scene Decomposition</a></li>
+  <li><a href="#quantitative-hierarchy" id="toc-quantitative-hierarchy" class="nav-link" data-scroll-target="#quantitative-hierarchy">Quantitative Hierarchy</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">GARField: Group Anything with Radiance Fields</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">nerf</div>
+    <div class="quarto-category">wip</div>
+    <div class="quarto-category">gaussian_splatting</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Notes on the GARField paper.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Saeejith Nair <a href="mailto:smnair@uwaterloo.ca" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 6, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>GARField is a project released by some of the core folks behind many NeRF projects (including Nerfstudio). They introduce a method which enables decomposing 3D scenes into a hierarchy of semantically meaningful groups from posed image inputs.</p>
+<section id="pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="pipeline">Pipeline</h2>
+<p>A high-level overview of their pipeline is as follows:</p>
+<section id="mask-extraction" class="level3">
+<h3 class="anchored" data-anchor-id="mask-extraction">Mask Extraction</h3>
+<p>Apply SAM to each image and derive 2D segmentation masks at various scales. Specifically, they use SAM’s automatic mask generator which queries SAM in a grid of points and produces 3 candidate segmentation masks per query point. They then filter and deduplicate nearly identical masks to produce a list of mask candidates of multiple sizes which can overlap or include each other. Note that this process is done independently of viewpoint, producing masks which may not be consistent across views. The goal is to generate a hierarchy of groupings based on objects’ physical size.</p>
+</section>
+<section id="scale-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="scale-estimation">Scale Estimation</h3>
+<p>Using the images, they partially train a radiance field and render a depth image from each training camera pose. Then using this depth image, for each mask, they consider the 3D points within the mask and pick the scale based on the extent of the points’ position distribution.</p>
+<p>For example, the mask gets projected into 3D space based on the depth image and the scale is estimated as the diameter of the sphere enclosing the object.</p>
+</section>
+<section id="scale-conditioned-affinity-field" class="level3">
+<h3 class="anchored" data-anchor-id="scale-conditioned-affinity-field">Scale-Conditioned Affinity Field</h3>
+<p>Next, they train a scale-conditioned affinity field.</p>
+<section id="affinity-field" class="level4">
+<h4 class="anchored" data-anchor-id="affinity-field">Affinity Field</h4>
+<p>An affinity field is a type of feature field in which the feature distance reflects points’ affinity (i.e.&nbsp;closeness). But what exactly does it mean for two objects in a scene to have high or low affinity? Their key insight is that this relationship is not absolute; rather it is a function of scale.</p>
+<p>For example, consider an image of a plant. At a coarse scale, we want all the leaves in the plant to be grouped together, or have high affinity. On the other hand, at a fine scale, we want to distinguish between each leaf in the plant so the affinity between each leaf must be very low.</p>
+<p>How can we imbue this understanding to a model? We need to train the model such that it understands that the desired grouping is a function of scale; i.e.&nbsp;we must condition the affinity field based on scale.</p>
+<p>The authors say:</p>
+<blockquote class="blockquote">
+<p>Scale-conditioning is a key component of GARField which allows consolidating inconsistent 2D mask candidates. The same point may be grouped in several ways depending on the granularity of the groupings desired. Scale-conditioning alleviates this inconsistency because it resolves ambiguity over which group a query should belong to. Under scale-conditioning, conflicting masks of the same point no longer fight each other during training, but rather can coexist in the same scene at different affinity scales.</p>
+</blockquote>
+<p>Formally, the scale-conditioned affinity field is defined as <span class="math inline">\(f(x, s)\)</span> over a 3D point <span class="math inline">\(x\)</span> and euclidean scale <span class="math inline">\(s\)</span>, similar to the formulation in their previous work, LERF. The output features are constrained to a unit hyper-sphere, and the affinity between two points at a scale is defined by <span class="math inline">\(\langle f(x_1, s), f(x_2, s) \rangle\)</span>. These features are then volumetrically rendered with a weighted average using the same rendering weights based on NeRF density to obtain a value on a per-ray basis.</p>
+</section>
+</section>
+<section id="contrastive-supervision" class="level3">
+<h3 class="anchored" data-anchor-id="contrastive-supervision">Contrastive Supervision</h3>
+<p>GARField uses contrastive learning to train the affinity field. Specifically, they supervise the field with a margin-based contrastive objective using a loss which, at a given scale, tries to pull features within the same group to be close, and another which pushes features in different groups apart.</p>
+<p>During training, consider sampling two rays <span class="math inline">\(r_1, r_2\)</span> from masks within the same training image, with corresponding scales <span class="math inline">\(s_1, s_2\)</span>. They volumetrically render the scale-conditioned affinity features along each ray to obtain ray-level features <span class="math inline">\(f_1\)</span> and <span class="math inline">\(f_2\)</span>. If the masks are the same (i.e.&nbsp;<span class="math inline">\(s_1 = s_2\)</span>), the features are pulled together with L2 distance: <span class="math inline">\(\|f_1 - f_2\|_2^2\)</span>. If <span class="math inline">\(s_1 \neq s_2\)</span>, the features are pushed apart: <span class="math inline">\(\max(0, m - \|f_1 - f_2\|_2)^2\)</span> where <span class="math inline">\(m\)</span> is the lower bound distance, or margin. Note that this loss is only applied among rays sampled from the same image, since masks across different viewpoints have no correspondence.</p>
+<p>However, the authors note that the supervision provided by the previous contrastive losses is not sufficient to preserve hierarchy. For example, although an egg might be correctly grouped with the soup at scale 0.22, at larger scales like 0.5, it fragments apart.</p>
+<p>This violates the two requirements a well-behaved affinity field must satisfy: transitivity and containment.</p>
+<section id="transitivity" class="level4">
+<h4 class="anchored" data-anchor-id="transitivity">Transitivity</h4>
+<p>Transitivity means that if two points are mutually grouped with a third, they should themselves be grouped together.</p>
+</section>
+<section id="containment" class="level4">
+<h4 class="anchored" data-anchor-id="containment">Containment</h4>
+<p>Containment means that if two points are grouped at a small scale, they should be grouped together at higher scales.</p>
+<p>To ensure these requirements are met, GARField employs continuous scale supervision and a containment auxiliary loss, instead of just employing the contrastive loss naively.</p>
+</section>
+</section>
+<section id="continuous-scale-supervision" class="level3">
+<h3 class="anchored" data-anchor-id="continuous-scale-supervision">Continuous scale supervision</h3>
+<p>If you only use the scales obtained from the 3D masks, the groups will only be defined at the discrete values where the masks were chosen. For example, consider a grape bunch. Each berry might correspond to a scale near <span class="math inline">\(s_1\)</span> and the whole bunch might correspond to a scale near <span class="math inline">\(s_2\)</span> but no objects exist in the middle between those two scales. This discontinuity results in grouping instability, since the scale supervision is defined sparsely.</p>
+<p>Instead, the authors propose augmenting the scale uniformly randomly between the current mask’s scale and the next smallest mask’s scale. If a ray’s mask is the smallest mask for the given viewpoint, then they interpolate the scale between 0 and <span class="math inline">\(s_1\)</span>. While the authors claim that this data augmentation strategy ensures continuous scale supervision throughout the field, it is unclear how this solves the problem of discontinuous jumps between groups of different scales.</p>
+<p>In practice, this means that given masks <span class="math inline">\(M_1, ..., M_n\)</span> and original scales <span class="math inline">\(s_1, ..., s_n\)</span>, during training, GARField will actually sample new values for the scales, such that <span class="math inline">\(s_1' \sim U(0, s_1)\)</span>, <span class="math inline">\(s_2' \sim U(s_1, s_2)\)</span>, <span class="math inline">\(s_3' \sim U(s_2, s_3)\)</span>, etc.</p>
+</section>
+<section id="containment-auxiliary-loss" class="level3">
+<h3 class="anchored" data-anchor-id="containment-auxiliary-loss">Containment Auxiliary Loss</h3>
+<p>To encourage containment such that small scale groups remain at larger scales, the authors propose a containment auxiliary loss. The intuition is that two grapes within the same cluster should also be grouped together at larger scales (i.e.&nbsp;the entire bunch). Thus, if two rays <span class="math inline">\(r_1\)</span> and <span class="math inline">\(r_2\)</span> are in the same mask with scale <span class="math inline">\(s\)</span>, then they should also be pulled together at any scale larger than <span class="math inline">\(s\)</span>.</p>
+<p>To achieve this, the authors describe how at each training step, for the rays grouped together at scale <span class="math inline">\(s\)</span>, they additionally sample a larger scale <span class="math inline">\(s' &gt; s\)</span> at which the rays are also pulled together. However, the paper is light on details about this strategy and it is unclear how the results of this loss are incorporated into the overall loss.</p>
+</section>
+</section>
+<section id="training" class="level2">
+<h2 class="anchored" data-anchor-id="training">Training</h2>
+<p>GARField is built using the Nerfstudio framework on top of the Nerfacto model by defining a separate output head for the grouping field. The grouping field is represented with a hashgrid with 24 layers, each with a feature dimension of 2. This is followed by a 4-layer MLP with 256 neurons and ReLU activations. The MLP takes the scale as an additional input, concatenating it with the hashgrid features. The resulting output embeddings (the feature vectors produced by the scale-conditioned affinity field) are <span class="math inline">\(d = 256\)</span> dimensions.</p>
+<p>It’s important to note that GARField maintains a clear separation between the affinity field and the traditional NeRF components. The affinity features (embeddings) and the RGB outputs from NeRF are treated as distinct representations within the model. This separation is implemented by ensuring that these two components do not share any weights in their respective neural networks.</p>
+<p>Additionally, the gradients computed for updating the affinity field do not propagate to or influence the parameters responsible for generating the RGB outputs in the NeRF model. This separation in the gradient flow means that the optimization of the affinity field occurs independently from the optimization of the NeRF’s color prediction.</p>
+<p>To manage the range of scales effectively, the authors implement two key strategies:</p>
+<ol type="1">
+<li><p>They cap the maximum scale at twice the extent of the camera positions used in capturing the scene. The “extent of cameras” refers to the maximum distance between any two camera positions. For instance, if the furthest apart cameras are 5 units away from each other, the maximum scale would be set to 10 units. This upper limit prevents the model from considering unreasonably large scales that exceed the scope of the captured scene.</p></li>
+<li><p>They apply sklearn’s quantile transform to normalize the scale inputs based on the distribution of computed 3D mask scales. The quantile transform maps the original distribution of scale values onto a more uniform distribution. This is particularly useful because the original scale values might be unevenly distributed, with perhaps many small scales (e.g., 0.1-1.0) and fewer large scales (e.g., 10-100). By applying the quantile transform, these values are “spread out” more evenly, typically resulting in a distribution between 0 and 1.</p></li>
+</ol>
+<p>GARField begins training the grouping field after 2000 steps of NeRF optimization, giving geometry time to converge. To speed up training, they first volumetrically render the hash value, then use it as input to the MLP to obtain a ray feature. With this deferred rendering, the same ray can be queried at different scales with only one extra MLP call. They also normalize the result of volume rendering to unit norm before inputting to the MLP, and also normalize the individual hashgrid value for point-wise queries.</p>
+<p>The authors note that preprocessing SAM masks takes around 3-10 minutes, followed by about 20 minutes for training on a GTX 4090 GPU.</p>
+<section id="ray-and-mask-sampling" class="level3">
+<h3 class="anchored" data-anchor-id="ray-and-mask-sampling">Ray and Mask Sampling</h3>
+<p>Similar to standard NeRF training, GARField samples rays over which to compute losses. However, because GARField uses a contrastive loss within each train image, naively sampling pixels uniformly during training is inadequate to provide a training signal in each minibatch of rays. To ensure sufficient pairs in each train batch, they first sample <span class="math inline">\(N\)</span> images, and sample <span class="math inline">\(M\)</span> rays within each image. To balance the number of images as well as the number of point pairs for supervision, they sample 16 images and 256 points per image, resulting in 4096 samples per train iteration.</p>
+<p>Recall that each ray can belong to one of 3 mask groups. Thus at each train step, they need to choose a mask group for each sampled ray. To do this, they retain a mapping from pixels to mask labels throughout training, and at each train step, randomly select a mask for each ray from its corresponding list of masks.</p>
+<p>However, the mask selection is not uniformly random; there are two important caveats:</p>
+<ol type="1">
+<li><p>The probability of a mask being chosen is weighted inversely with the log of the mask’s 2D pixel area. This prevents large scales from dominating the sampling process, since larger masks can be chosen via more pixels.</p></li>
+<li><p>During mask selection, they coordinate the random scale chosen across rays in the same image to increase the probability of positive pairs. To do this, they sample a single value between 0 and 1 per image, and index into each pixel’s mask probability CDF with the same value, ensuring pixels which land within the same group are assigned the same mask. Otherwise, the loss gets dominated by pushing forces which destabilize training.</p></li>
+</ol>
+</section>
+</section>
+<section id="hierarchical-decomposition" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchical-decomposition">Hierarchical Decomposition</h2>
+<p>Once GARField has optimized a scale-conditioned affinity field, it can generate a hierarchy of 3D groups, organized in a tree structure where each node can be broken into potential subgroups. This hierarchical decomposition is achieved through a recursive clustering process that decreases the scale for affinity, using HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise), a density-based clustering algorithm that doesn’t require a prior on the number of clusters.</p>
+<section id="process-overview" class="level3">
+<h3 class="anchored" data-anchor-id="process-overview">Process Overview</h3>
+<p>The hierarchical decomposition process can be broken down into several key steps:</p>
+<ol type="1">
+<li><p><strong>Initialization</strong>: The hierarchy is initialized by globally clustering features at a large scale (s_max), which is set to 1.0 for all experiments. This corresponds to the extent of the input cameras’ positions. These initial clusters form the top-level nodes in the scene decomposition.</p></li>
+<li><p><strong>Recursive Clustering</strong>: The process then iteratively reduces the scale by a fixed epsilon (set to 0.05 in the experiments) and runs HDBSCAN on each leaf node. If HDBSCAN returns more than one cluster for a given node, those clusters are added as children, and the process recurses on these new nodes.</p></li>
+<li><p><strong>Termination</strong>: This recursive process continues until the scale reaches 0, at which point the procedure terminates, returning the complete hierarchical tree.</p></li>
+</ol>
+</section>
+</section>
+<section id="experiments" class="level2">
+<h2 class="anchored" data-anchor-id="experiments">Experiments</h2>
+<p>The authors note that existing 3D scan datasets tend to focus on object-level scans (e.g.&nbsp;Google Scanned Objects, Partnet), are simulated (e.g.&nbsp;Contrastive Lift), or contain primarily indoor household scenes (e.g.&nbsp;Scannet). Since they want to assess GARField’s ability to decompose in-the-wild 3D scenes into hierarchical groups (which vary wideley in size and semantics), they instead use a wide variety of indoor and outdoor scenes from the Nerfstudio and LERF datasets, with special focus on scenes with significant object hierarchy.</p>
+<section id="qualitative-scene-decomposition" class="level3">
+<h3 class="anchored" data-anchor-id="qualitative-scene-decomposition">Qualitative Scene Decomposition</h3>
+<p>To visualize the decomposition, the authors use Gaussian Splatting to query GARField’s affinity field at gaussian centers. This approach is chosen because gaussian splats are easier to segment in 3D compared to NeRFs.</p>
+<p>Two types of hierarchical clustering results are visualized:</p>
+<ol type="1">
+<li><p>Global clustering at a coarse scale, followed by selecting groups corresponding to a few objects and further decomposing them into subgroups at successively decreasing scales.</p></li>
+<li><p>Tree decomposition, where a single object is selected from the global clustering and then broken down into a hierarchy of subparts.</p></li>
+</ol>
+<p>The results show that GARField achieves high-fidelity 3D groupings across a wide range of scenes and objects, from man-made objects (like keyboards and Lego models) to complex natural objects (like plants). By varying the scale, GARField can separate objects at different levels of granularity, such as distinguishing between a succulent and its pot, or identifying individual components of a toy.</p>
+</section>
+<section id="quantitative-hierarchy" class="level3">
+<h3 class="anchored" data-anchor-id="quantitative-hierarchy">Quantitative Hierarchy</h3>
+<p>(WIP, coming soon…)</p>
+<!-- The authors quantitatively evaluate GARField against annotated images using two metrics:
+
+1. 3D Completeness: This metric measures view consistency against annotations from multiple views. It's designed to evaluate whether groups correspond to complete 3D objects rather than just partial views.
+
+2. Hierarchical Grouping Recall: This metric measures the recall of various hierarchical masks via mean Intersection over Union (mIOU) against ground truth human annotations.
+
+#### 3D Completeness
+
+To evaluate 3D completeness, the authors choose a 3D point to be projected into 3 different viewpoints and label 3 corresponding view-consistent ground truth masks containing that point at coarse, medium, and fine levels. They then mine multiple masks from GARField across multiple scales and compare against SAM (Segment Anything Model) by clicking the point in the image and taking all 3 masks.
+
+The results show that GARField produces more complete 3D masks than SAM across viewpoints, resulting in higher mIOU with multi-view human annotations of objects. This effect is especially apparent at the most granular level, where SAM sometimes struggles to produce fine groups from certain perspectives.
+
+#### Hierarchical Grouping Recall
+
+For this experiment, the authors choose one novel viewpoint for each of 5 scenes and label up to 3 ground truth hierarchical groups for 1-2 objects. GARField outputs a set of masks by clustering image-space features, outputting one mask per tree node. This is compared against SAM's automatic mask generation.
+
+The results show that because GARField has fused groups from multiple perspectives, it results in higher fidelity groupings than any single view of SAM, leading to higher mIOU with annotations. The authors also perform ablation studies, demonstrating that both scale conditioning and scale densification are necessary for high-quality groupings.
+
+## Applications
+
+The authors demonstrate two key applications of GARField:
+
+1. Hierarchical 3D Asset Extraction: GARField can extract both entire objects (like an excavator) and their subparts (like the crane or wheels) as 3D assets. This capability could be valuable for 3D modeling and scene understanding tasks.
+
+2. Interactive Segmentation: Users can interact with GARField using clicks to extract groups of different sizes. This allows for intuitive and flexible exploration of the scene hierarchy.
+
+## Limitations
+
+The authors acknowledge several limitations of GARField:
+
+1. Dependency on 2D mask generator: If the input masks fail to contain a desired group, it won't emerge in 3D.
+
+2. Uneven viewpoint coverage: Regions with uneven viewpoints can suffer from artificial group boundaries.
+
+3. Ambiguity within a single scale: Multiple valid groupings may exist at the same scale, which the current approach doesn't handle.
+
+4. Separation of different-sized parts: Object parts of different sizes may appear at different levels of the tree rather than grouped together.
+
+5. Naive tree generation: The current greedy algorithm for tree generation can result in spurious small groups at deeper levels.
+
+## Conclusion
+
+GARField presents a novel approach for distilling multi-level masks into a dense scale-conditioned affinity field for hierarchical 3D scene decomposition. By leveraging scale-conditioning, the affinity field can learn meaningful groups from conflicting 2D group inputs and break apart the scene at multiple different levels. This capability opens up exciting possibilities for applications in robotics, dynamic scene reconstruction, and scene editing.
+
+The method's ability to produce view-consistent, hierarchical 3D groupings represents a significant advancement over traditional 2D segmentation approaches. However, there's still room for improvement, particularly in handling ambiguities within scales and refining the tree generation process.
+
+As the field of 3D scene understanding continues to evolve, techniques like GARField that can bridge the gap between 2D inputs and 3D understanding will likely play an increasingly important role in enabling more sophisticated interactions with and analyses of complex 3D environments. -->
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Built with ❤️ and <a href="https://quarto.org/">Quarto</a>. Feel free to steal this website’s <a href="https://github.com/saeejithnair/saeejithnair.github.io">source code</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>© CC BY-NC-SA 4.0</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

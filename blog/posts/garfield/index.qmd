@@ -1,0 +1,197 @@
+---
+title: "GARField: Group Anything with Radiance Fields"
+description: Notes on the GARField paper.
+date: "2024-08-06"
+image: "/assets/posts/in_progress.jpg"
+categories: [nerf, wip, gaussian_splatting]
+format:
+  html:
+    toc: true
+    page-layout: article
+    code-line-numbers: true
+    smooth-scroll: true
+highlight-style: github
+crossref:
+  chapters: true
+number-sections: false
+---
+
+GARField is a project released by some of the core folks behind many NeRF projects (including Nerfstudio). They introduce a method which enables decomposing 3D scenes into a hierarchy of semantically meaningful groups from posed image inputs.
+
+## Pipeline
+
+A high-level overview of their pipeline is as follows:
+
+### Mask Extraction
+
+Apply SAM to each image and derive 2D segmentation masks at various scales. Specifically, they use SAM's automatic mask generator which queries SAM in a grid of points and produces 3 candidate segmentation masks per query point. They then filter and deduplicate nearly identical masks to produce a list of mask candidates of multiple sizes which can overlap or include each other. Note that this process is done independently of viewpoint, producing masks which may not be consistent across views. The goal is to generate a hierarchy of groupings based on objects' physical size.
+
+### Scale Estimation
+
+Using the images, they partially train a radiance field and render a depth image from each training camera pose. Then using this depth image, for each mask, they consider the 3D points within the mask and pick the scale based on the extent of the points' position distribution.
+
+For example, the mask gets projected into 3D space based on the depth image and the scale is estimated as the diameter of the sphere enclosing the object.
+
+### Scale-Conditioned Affinity Field
+
+Next, they train a scale-conditioned affinity field.
+
+#### Affinity Field
+
+An affinity field is a type of feature field in which the feature distance reflects points' affinity (i.e. closeness). But what exactly does it mean for two objects in a scene to have high or low affinity? Their key insight is that this relationship is not absolute; rather it is a function of scale.
+
+For example, consider an image of a plant. At a coarse scale, we want all the leaves in the plant to be grouped together, or have high affinity. On the other hand, at a fine scale, we want to distinguish between each leaf in the plant so the affinity between each leaf must be very low.
+
+How can we imbue this understanding to a model? We need to train the model such that it understands that the desired grouping is a function of scale; i.e. we must condition the affinity field based on scale.
+
+The authors say:
+
+> Scale-conditioning is a key component of GARField which allows consolidating inconsistent 2D mask candidates. The same point may be grouped in several ways depending on the granularity of the groupings desired. Scale-conditioning alleviates this inconsistency because it resolves ambiguity over which group a query should belong to. Under scale-conditioning, conflicting masks of the same point no longer fight each other during training, but rather can coexist in the same scene at different affinity scales.
+
+Formally, the scale-conditioned affinity field is defined as $f(x, s)$ over a 3D point $x$ and euclidean scale $s$, similar to the formulation in their previous work, LERF. The output features are constrained to a unit hyper-sphere, and the affinity between two points at a scale is defined by $\langle f(x_1, s), f(x_2, s) \rangle$. These features are then volumetrically rendered with a weighted average using the same rendering weights based on NeRF density to obtain a value on a per-ray basis.
+
+### Contrastive Supervision
+
+GARField uses contrastive learning to train the affinity field. Specifically, they supervise the field with a margin-based contrastive objective using a loss which, at a given scale, tries to pull features within the same group to be close, and another which pushes features in different groups apart.
+
+During training, consider sampling two rays $r_1, r_2$ from masks within the same training image, with corresponding scales $s_1, s_2$. They volumetrically render the scale-conditioned affinity features along each ray to obtain ray-level features $f_1$ and $f_2$. If the masks are the same (i.e. $s_1 = s_2$), the features are pulled together with L2 distance: $\|f_1 - f_2\|_2^2$. If $s_1 \neq s_2$, the features are pushed apart: $\max(0, m - \|f_1 - f_2\|_2)^2$ where $m$ is the lower bound distance, or margin. Note that this loss is only applied among rays sampled from the same image, since masks across different viewpoints have no correspondence.
+
+However, the authors note that the supervision provided by the previous contrastive losses is not sufficient to preserve hierarchy. For example, although an egg might be correctly grouped with the soup at scale 0.22, at larger scales like 0.5, it fragments apart.
+
+This violates the two requirements a well-behaved affinity field must satisfy: transitivity and containment.
+
+#### Transitivity
+
+Transitivity means that if two points are mutually grouped with a third, they should themselves be grouped together.
+
+#### Containment
+
+Containment means that if two points are grouped at a small scale, they should be grouped together at higher scales.
+
+To ensure these requirements are met, GARField employs continuous scale supervision and a containment auxiliary loss, instead of just employing the contrastive loss naively.
+
+### Continuous scale supervision
+
+If you only use the scales obtained from the 3D masks, the groups will only be defined at the discrete values where the masks were chosen. For example, consider a grape bunch. Each berry might correspond to a scale near $s_1$ and the whole bunch might correspond to a scale near $s_2$ but no objects exist in the middle between those two scales. This discontinuity results in grouping instability, since the scale supervision is defined sparsely.
+
+Instead, the authors propose augmenting the scale uniformly randomly between the current mask's scale and the next smallest mask's scale. If a ray's mask is the smallest mask for the given viewpoint, then they interpolate the scale between 0 and $s_1$. While the authors claim that this data augmentation strategy ensures continuous scale supervision throughout the field, it is unclear how this solves the problem of discontinuous jumps between groups of different scales.
+
+In practice, this means that given masks $M_1, ..., M_n$ and original scales $s_1, ..., s_n$, during training, GARField will actually sample new values for the scales, such that $s_1' \sim U(0, s_1)$, $s_2' \sim U(s_1, s_2)$, $s_3' \sim U(s_2, s_3)$, etc.
+
+### Containment Auxiliary Loss
+
+To encourage containment such that small scale groups remain at larger scales, the authors propose a containment auxiliary loss. The intuition is that two grapes within the same cluster should also be grouped together at larger scales (i.e. the entire bunch). Thus, if two rays $r_1$ and $r_2$ are in the same mask with scale $s$, then they should also be pulled together at any scale larger than $s$.
+
+To achieve this, the authors describe how at each training step, for the rays grouped together at scale $s$, they additionally sample a larger scale $s' > s$ at which the rays are also pulled together. However, the paper is light on details about this strategy and it is unclear how the results of this loss are incorporated into the overall loss.
+
+## Training
+
+GARField is built using the Nerfstudio framework on top of the Nerfacto model by defining a separate output head for the grouping field. The grouping field is represented with a hashgrid with 24 layers, each with a feature dimension of 2. This is followed by a 4-layer MLP with 256 neurons and ReLU activations. The MLP takes the scale as an additional input, concatenating it with the hashgrid features. The resulting output embeddings (the feature vectors produced by the scale-conditioned affinity field) are $d = 256$ dimensions.
+
+It's important to note that GARField maintains a clear separation between the affinity field and the traditional NeRF components. The affinity features (embeddings) and the RGB outputs from NeRF are treated as distinct representations within the model. This separation is implemented by ensuring that these two components do not share any weights in their respective neural networks.
+
+Additionally, the gradients computed for updating the affinity field do not propagate to or influence the parameters responsible for generating the RGB outputs in the NeRF model. This separation in the gradient flow means that the optimization of the affinity field occurs independently from the optimization of the NeRF's color prediction.
+
+To manage the range of scales effectively, the authors implement two key strategies:
+
+1. They cap the maximum scale at twice the extent of the camera positions used in capturing the scene. The "extent of cameras" refers to the maximum distance between any two camera positions. For instance, if the furthest apart cameras are 5 units away from each other, the maximum scale would be set to 10 units. This upper limit prevents the model from considering unreasonably large scales that exceed the scope of the captured scene.
+
+2. They apply sklearn's quantile transform to normalize the scale inputs based on the distribution of computed 3D mask scales. The quantile transform maps the original distribution of scale values onto a more uniform distribution. This is particularly useful because the original scale values might be unevenly distributed, with perhaps many small scales (e.g., 0.1-1.0) and fewer large scales (e.g., 10-100). By applying the quantile transform, these values are "spread out" more evenly, typically resulting in a distribution between 0 and 1.
+
+GARField begins training the grouping field after 2000 steps of NeRF optimization, giving geometry time to converge. To speed up training, they first volumetrically render the hash value, then use it as input to the MLP to obtain a ray feature. With this deferred rendering, the same ray can be queried at different scales with only one extra MLP call. They also normalize the result of volume rendering to unit norm before inputting to the MLP, and also normalize the individual hashgrid value for point-wise queries.
+
+The authors note that preprocessing SAM masks takes around 3-10 minutes, followed by about 20 minutes for training on a GTX 4090 GPU.
+
+### Ray and Mask Sampling
+
+Similar to standard NeRF training, GARField samples rays over which to compute losses. However, because GARField uses a contrastive loss within each train image, naively sampling pixels uniformly during training is inadequate to provide a training signal in each minibatch of rays. To ensure sufficient pairs in each train batch, they first sample $N$ images, and sample $M$ rays within each image. To balance the number of images as well as the number of point pairs for supervision, they sample 16 images and 256 points per image, resulting in 4096 samples per train iteration.
+
+Recall that each ray can belong to one of 3 mask groups. Thus at each train step, they need to choose a mask group for each sampled ray. To do this, they retain a mapping from pixels to mask labels throughout training, and at each train step, randomly select a mask for each ray from its corresponding list of masks.
+
+However, the mask selection is not uniformly random; there are two important caveats:
+
+1. The probability of a mask being chosen is weighted inversely with the log of the mask's 2D pixel area. This prevents large scales from dominating the sampling process, since larger masks can be chosen via more pixels.
+
+2. During mask selection, they coordinate the random scale chosen across rays in the same image to increase the probability of positive pairs. To do this, they sample a single value between 0 and 1 per image, and index into each pixel's mask probability CDF with the same value, ensuring pixels which land within the same group are assigned the same mask. Otherwise, the loss gets dominated by pushing forces which destabilize training.
+
+## Hierarchical Decomposition
+
+Once GARField has optimized a scale-conditioned affinity field, it can generate a hierarchy of 3D groups, organized in a tree structure where each node can be broken into potential subgroups. This hierarchical decomposition is achieved through a recursive clustering process that decreases the scale for affinity, using HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise), a density-based clustering algorithm that doesn't require a prior on the number of clusters.
+
+### Process Overview
+
+The hierarchical decomposition process can be broken down into several key steps:
+
+1. **Initialization**: The hierarchy is initialized by globally clustering features at a large scale (s_max), which is set to 1.0 for all experiments. This corresponds to the extent of the input cameras' positions. These initial clusters form the top-level nodes in the scene decomposition.
+
+2. **Recursive Clustering**: The process then iteratively reduces the scale by a fixed epsilon (set to 0.05 in the experiments) and runs HDBSCAN on each leaf node. If HDBSCAN returns more than one cluster for a given node, those clusters are added as children, and the process recurses on these new nodes.
+
+3. **Termination**: This recursive process continues until the scale reaches 0, at which point the procedure terminates, returning the complete hierarchical tree.
+
+## Experiments
+
+The authors note that existing 3D scan datasets tend to focus on object-level scans (e.g. Google Scanned Objects, Partnet), are simulated (e.g. Contrastive Lift), or contain primarily indoor household scenes (e.g. Scannet). Since they want to assess GARField's ability to decompose in-the-wild 3D scenes into hierarchical groups (which vary wideley in size and semantics), they instead use a wide variety of indoor and outdoor scenes from the Nerfstudio and LERF datasets, with special focus on scenes with significant object hierarchy.
+
+
+### Qualitative Scene Decomposition
+
+To visualize the decomposition, the authors use Gaussian Splatting to query GARField's affinity field at gaussian centers. This approach is chosen because gaussian splats are easier to segment in 3D compared to NeRFs.
+
+Two types of hierarchical clustering results are visualized:
+
+1. Global clustering at a coarse scale, followed by selecting groups corresponding to a few objects and further decomposing them into subgroups at successively decreasing scales.
+
+2. Tree decomposition, where a single object is selected from the global clustering and then broken down into a hierarchy of subparts.
+
+The results show that GARField achieves high-fidelity 3D groupings across a wide range of scenes and objects, from man-made objects (like keyboards and Lego models) to complex natural objects (like plants). By varying the scale, GARField can separate objects at different levels of granularity, such as distinguishing between a succulent and its pot, or identifying individual components of a toy.
+
+### Quantitative Hierarchy
+(WIP, coming soon...)
+
+<!-- The authors quantitatively evaluate GARField against annotated images using two metrics:
+
+1. 3D Completeness: This metric measures view consistency against annotations from multiple views. It's designed to evaluate whether groups correspond to complete 3D objects rather than just partial views.
+
+2. Hierarchical Grouping Recall: This metric measures the recall of various hierarchical masks via mean Intersection over Union (mIOU) against ground truth human annotations.
+
+#### 3D Completeness
+
+To evaluate 3D completeness, the authors choose a 3D point to be projected into 3 different viewpoints and label 3 corresponding view-consistent ground truth masks containing that point at coarse, medium, and fine levels. They then mine multiple masks from GARField across multiple scales and compare against SAM (Segment Anything Model) by clicking the point in the image and taking all 3 masks.
+
+The results show that GARField produces more complete 3D masks than SAM across viewpoints, resulting in higher mIOU with multi-view human annotations of objects. This effect is especially apparent at the most granular level, where SAM sometimes struggles to produce fine groups from certain perspectives.
+
+#### Hierarchical Grouping Recall
+
+For this experiment, the authors choose one novel viewpoint for each of 5 scenes and label up to 3 ground truth hierarchical groups for 1-2 objects. GARField outputs a set of masks by clustering image-space features, outputting one mask per tree node. This is compared against SAM's automatic mask generation.
+
+The results show that because GARField has fused groups from multiple perspectives, it results in higher fidelity groupings than any single view of SAM, leading to higher mIOU with annotations. The authors also perform ablation studies, demonstrating that both scale conditioning and scale densification are necessary for high-quality groupings.
+
+## Applications
+
+The authors demonstrate two key applications of GARField:
+
+1. Hierarchical 3D Asset Extraction: GARField can extract both entire objects (like an excavator) and their subparts (like the crane or wheels) as 3D assets. This capability could be valuable for 3D modeling and scene understanding tasks.
+
+2. Interactive Segmentation: Users can interact with GARField using clicks to extract groups of different sizes. This allows for intuitive and flexible exploration of the scene hierarchy.
+
+## Limitations
+
+The authors acknowledge several limitations of GARField:
+
+1. Dependency on 2D mask generator: If the input masks fail to contain a desired group, it won't emerge in 3D.
+
+2. Uneven viewpoint coverage: Regions with uneven viewpoints can suffer from artificial group boundaries.
+
+3. Ambiguity within a single scale: Multiple valid groupings may exist at the same scale, which the current approach doesn't handle.
+
+4. Separation of different-sized parts: Object parts of different sizes may appear at different levels of the tree rather than grouped together.
+
+5. Naive tree generation: The current greedy algorithm for tree generation can result in spurious small groups at deeper levels.
+
+## Conclusion
+
+GARField presents a novel approach for distilling multi-level masks into a dense scale-conditioned affinity field for hierarchical 3D scene decomposition. By leveraging scale-conditioning, the affinity field can learn meaningful groups from conflicting 2D group inputs and break apart the scene at multiple different levels. This capability opens up exciting possibilities for applications in robotics, dynamic scene reconstruction, and scene editing.
+
+The method's ability to produce view-consistent, hierarchical 3D groupings represents a significant advancement over traditional 2D segmentation approaches. However, there's still room for improvement, particularly in handling ambiguities within scales and refining the tree generation process.
+
+As the field of 3D scene understanding continues to evolve, techniques like GARField that can bridge the gap between 2D inputs and 3D understanding will likely play an increasingly important role in enabling more sophisticated interactions with and analyses of complex 3D environments. -->

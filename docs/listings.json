@@ -2,6 +2,8 @@
   {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/posts/garfield/index.html",
+      "/blog/posts/2d_gaussian_splatting/index.html",
       "/blog/posts/elastic_nerf/index.html",
       "/blog/posts/research_workflows/index.html"
     ]

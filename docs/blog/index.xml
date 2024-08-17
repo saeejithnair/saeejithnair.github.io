@@ -10,7 +10,619 @@
 <atom:link href="https://www.saeejithnair.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.4.537</generator>
-<lastBuildDate>Tue, 09 Jan 2024 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 06 Aug 2024 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>GARField: Group Anything with Radiance Fields</title>
+  <dc:creator>Saeejith Nair</dc:creator>
+  <link>https://www.saeejithnair.github.io/blog/posts/garfield/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>GARField is a project released by some of the core folks behind many NeRF projects (including Nerfstudio). They introduce a method which enables decomposing 3D scenes into a hierarchy of semantically meaningful groups from posed image inputs.</p>
+<section id="pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="pipeline">Pipeline</h2>
+<p>A high-level overview of their pipeline is as follows:</p>
+<section id="mask-extraction" class="level3">
+<h3 class="anchored" data-anchor-id="mask-extraction">Mask Extraction</h3>
+<p>Apply SAM to each image and derive 2D segmentation masks at various scales. Specifically, they use SAM’s automatic mask generator which queries SAM in a grid of points and produces 3 candidate segmentation masks per query point. They then filter and deduplicate nearly identical masks to produce a list of mask candidates of multiple sizes which can overlap or include each other. Note that this process is done independently of viewpoint, producing masks which may not be consistent across views. The goal is to generate a hierarchy of groupings based on objects’ physical size.</p>
+</section>
+<section id="scale-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="scale-estimation">Scale Estimation</h3>
+<p>Using the images, they partially train a radiance field and render a depth image from each training camera pose. Then using this depth image, for each mask, they consider the 3D points within the mask and pick the scale based on the extent of the points’ position distribution.</p>
+<p>For example, the mask gets projected into 3D space based on the depth image and the scale is estimated as the diameter of the sphere enclosing the object.</p>
+</section>
+<section id="scale-conditioned-affinity-field" class="level3">
+<h3 class="anchored" data-anchor-id="scale-conditioned-affinity-field">Scale-Conditioned Affinity Field</h3>
+<p>Next, they train a scale-conditioned affinity field.</p>
+<section id="affinity-field" class="level4">
+<h4 class="anchored" data-anchor-id="affinity-field">Affinity Field</h4>
+<p>An affinity field is a type of feature field in which the feature distance reflects points’ affinity (i.e.&nbsp;closeness). But what exactly does it mean for two objects in a scene to have high or low affinity? Their key insight is that this relationship is not absolute; rather it is a function of scale.</p>
+<p>For example, consider an image of a plant. At a coarse scale, we want all the leaves in the plant to be grouped together, or have high affinity. On the other hand, at a fine scale, we want to distinguish between each leaf in the plant so the affinity between each leaf must be very low.</p>
+<p>How can we imbue this understanding to a model? We need to train the model such that it understands that the desired grouping is a function of scale; i.e.&nbsp;we must condition the affinity field based on scale.</p>
+<p>The authors say:</p>
+<blockquote class="blockquote">
+<p>Scale-conditioning is a key component of GARField which allows consolidating inconsistent 2D mask candidates. The same point may be grouped in several ways depending on the granularity of the groupings desired. Scale-conditioning alleviates this inconsistency because it resolves ambiguity over which group a query should belong to. Under scale-conditioning, conflicting masks of the same point no longer fight each other during training, but rather can coexist in the same scene at different affinity scales.</p>
+</blockquote>
+<p>Formally, the scale-conditioned affinity field is defined as <img src="https://latex.codecogs.com/png.latex?f(x,%20s)"> over a 3D point <img src="https://latex.codecogs.com/png.latex?x"> and euclidean scale <img src="https://latex.codecogs.com/png.latex?s">, similar to the formulation in their previous work, LERF. The output features are constrained to a unit hyper-sphere, and the affinity between two points at a scale is defined by <img src="https://latex.codecogs.com/png.latex?%5Clangle%20f(x_1,%20s),%20f(x_2,%20s)%20%5Crangle">. These features are then volumetrically rendered with a weighted average using the same rendering weights based on NeRF density to obtain a value on a per-ray basis.</p>
+</section>
+</section>
+<section id="contrastive-supervision" class="level3">
+<h3 class="anchored" data-anchor-id="contrastive-supervision">Contrastive Supervision</h3>
+<p>GARField uses contrastive learning to train the affinity field. Specifically, they supervise the field with a margin-based contrastive objective using a loss which, at a given scale, tries to pull features within the same group to be close, and another which pushes features in different groups apart.</p>
+<p>During training, consider sampling two rays <img src="https://latex.codecogs.com/png.latex?r_1,%20r_2"> from masks within the same training image, with corresponding scales <img src="https://latex.codecogs.com/png.latex?s_1,%20s_2">. They volumetrically render the scale-conditioned affinity features along each ray to obtain ray-level features <img src="https://latex.codecogs.com/png.latex?f_1"> and <img src="https://latex.codecogs.com/png.latex?f_2">. If the masks are the same (i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?s_1%20=%20s_2">), the features are pulled together with L2 distance: <img src="https://latex.codecogs.com/png.latex?%5C%7Cf_1%20-%20f_2%5C%7C_2%5E2">. If <img src="https://latex.codecogs.com/png.latex?s_1%20%5Cneq%20s_2">, the features are pushed apart: <img src="https://latex.codecogs.com/png.latex?%5Cmax(0,%20m%20-%20%5C%7Cf_1%20-%20f_2%5C%7C_2)%5E2"> where <img src="https://latex.codecogs.com/png.latex?m"> is the lower bound distance, or margin. Note that this loss is only applied among rays sampled from the same image, since masks across different viewpoints have no correspondence.</p>
+<p>However, the authors note that the supervision provided by the previous contrastive losses is not sufficient to preserve hierarchy. For example, although an egg might be correctly grouped with the soup at scale 0.22, at larger scales like 0.5, it fragments apart.</p>
+<p>This violates the two requirements a well-behaved affinity field must satisfy: transitivity and containment.</p>
+<section id="transitivity" class="level4">
+<h4 class="anchored" data-anchor-id="transitivity">Transitivity</h4>
+<p>Transitivity means that if two points are mutually grouped with a third, they should themselves be grouped together.</p>
+</section>
+<section id="containment" class="level4">
+<h4 class="anchored" data-anchor-id="containment">Containment</h4>
+<p>Containment means that if two points are grouped at a small scale, they should be grouped together at higher scales.</p>
+<p>To ensure these requirements are met, GARField employs continuous scale supervision and a containment auxiliary loss, instead of just employing the contrastive loss naively.</p>
+</section>
+</section>
+<section id="continuous-scale-supervision" class="level3">
+<h3 class="anchored" data-anchor-id="continuous-scale-supervision">Continuous scale supervision</h3>
+<p>If you only use the scales obtained from the 3D masks, the groups will only be defined at the discrete values where the masks were chosen. For example, consider a grape bunch. Each berry might correspond to a scale near <img src="https://latex.codecogs.com/png.latex?s_1"> and the whole bunch might correspond to a scale near <img src="https://latex.codecogs.com/png.latex?s_2"> but no objects exist in the middle between those two scales. This discontinuity results in grouping instability, since the scale supervision is defined sparsely.</p>
+<p>Instead, the authors propose augmenting the scale uniformly randomly between the current mask’s scale and the next smallest mask’s scale. If a ray’s mask is the smallest mask for the given viewpoint, then they interpolate the scale between 0 and <img src="https://latex.codecogs.com/png.latex?s_1">. While the authors claim that this data augmentation strategy ensures continuous scale supervision throughout the field, it is unclear how this solves the problem of discontinuous jumps between groups of different scales.</p>
+<p>In practice, this means that given masks <img src="https://latex.codecogs.com/png.latex?M_1,%20...,%20M_n"> and original scales <img src="https://latex.codecogs.com/png.latex?s_1,%20...,%20s_n">, during training, GARField will actually sample new values for the scales, such that <img src="https://latex.codecogs.com/png.latex?s_1'%20%5Csim%20U(0,%20s_1)">, <img src="https://latex.codecogs.com/png.latex?s_2'%20%5Csim%20U(s_1,%20s_2)">, <img src="https://latex.codecogs.com/png.latex?s_3'%20%5Csim%20U(s_2,%20s_3)">, etc.</p>
+</section>
+<section id="containment-auxiliary-loss" class="level3">
+<h3 class="anchored" data-anchor-id="containment-auxiliary-loss">Containment Auxiliary Loss</h3>
+<p>To encourage containment such that small scale groups remain at larger scales, the authors propose a containment auxiliary loss. The intuition is that two grapes within the same cluster should also be grouped together at larger scales (i.e.&nbsp;the entire bunch). Thus, if two rays <img src="https://latex.codecogs.com/png.latex?r_1"> and <img src="https://latex.codecogs.com/png.latex?r_2"> are in the same mask with scale <img src="https://latex.codecogs.com/png.latex?s">, then they should also be pulled together at any scale larger than <img src="https://latex.codecogs.com/png.latex?s">.</p>
+<p>To achieve this, the authors describe how at each training step, for the rays grouped together at scale <img src="https://latex.codecogs.com/png.latex?s">, they additionally sample a larger scale <img src="https://latex.codecogs.com/png.latex?s'%20%3E%20s"> at which the rays are also pulled together. However, the paper is light on details about this strategy and it is unclear how the results of this loss are incorporated into the overall loss.</p>
+</section>
+</section>
+<section id="training" class="level2">
+<h2 class="anchored" data-anchor-id="training">Training</h2>
+<p>GARField is built using the Nerfstudio framework on top of the Nerfacto model by defining a separate output head for the grouping field. The grouping field is represented with a hashgrid with 24 layers, each with a feature dimension of 2. This is followed by a 4-layer MLP with 256 neurons and ReLU activations. The MLP takes the scale as an additional input, concatenating it with the hashgrid features. The resulting output embeddings (the feature vectors produced by the scale-conditioned affinity field) are <img src="https://latex.codecogs.com/png.latex?d%20=%20256"> dimensions.</p>
+<p>It’s important to note that GARField maintains a clear separation between the affinity field and the traditional NeRF components. The affinity features (embeddings) and the RGB outputs from NeRF are treated as distinct representations within the model. This separation is implemented by ensuring that these two components do not share any weights in their respective neural networks.</p>
+<p>Additionally, the gradients computed for updating the affinity field do not propagate to or influence the parameters responsible for generating the RGB outputs in the NeRF model. This separation in the gradient flow means that the optimization of the affinity field occurs independently from the optimization of the NeRF’s color prediction.</p>
+<p>To manage the range of scales effectively, the authors implement two key strategies:</p>
+<ol type="1">
+<li><p>They cap the maximum scale at twice the extent of the camera positions used in capturing the scene. The “extent of cameras” refers to the maximum distance between any two camera positions. For instance, if the furthest apart cameras are 5 units away from each other, the maximum scale would be set to 10 units. This upper limit prevents the model from considering unreasonably large scales that exceed the scope of the captured scene.</p></li>
+<li><p>They apply sklearn’s quantile transform to normalize the scale inputs based on the distribution of computed 3D mask scales. The quantile transform maps the original distribution of scale values onto a more uniform distribution. This is particularly useful because the original scale values might be unevenly distributed, with perhaps many small scales (e.g., 0.1-1.0) and fewer large scales (e.g., 10-100). By applying the quantile transform, these values are “spread out” more evenly, typically resulting in a distribution between 0 and 1.</p></li>
+</ol>
+<p>GARField begins training the grouping field after 2000 steps of NeRF optimization, giving geometry time to converge. To speed up training, they first volumetrically render the hash value, then use it as input to the MLP to obtain a ray feature. With this deferred rendering, the same ray can be queried at different scales with only one extra MLP call. They also normalize the result of volume rendering to unit norm before inputting to the MLP, and also normalize the individual hashgrid value for point-wise queries.</p>
+<p>The authors note that preprocessing SAM masks takes around 3-10 minutes, followed by about 20 minutes for training on a GTX 4090 GPU.</p>
+<section id="ray-and-mask-sampling" class="level3">
+<h3 class="anchored" data-anchor-id="ray-and-mask-sampling">Ray and Mask Sampling</h3>
+<p>Similar to standard NeRF training, GARField samples rays over which to compute losses. However, because GARField uses a contrastive loss within each train image, naively sampling pixels uniformly during training is inadequate to provide a training signal in each minibatch of rays. To ensure sufficient pairs in each train batch, they first sample <img src="https://latex.codecogs.com/png.latex?N"> images, and sample <img src="https://latex.codecogs.com/png.latex?M"> rays within each image. To balance the number of images as well as the number of point pairs for supervision, they sample 16 images and 256 points per image, resulting in 4096 samples per train iteration.</p>
+<p>Recall that each ray can belong to one of 3 mask groups. Thus at each train step, they need to choose a mask group for each sampled ray. To do this, they retain a mapping from pixels to mask labels throughout training, and at each train step, randomly select a mask for each ray from its corresponding list of masks.</p>
+<p>However, the mask selection is not uniformly random; there are two important caveats:</p>
+<ol type="1">
+<li><p>The probability of a mask being chosen is weighted inversely with the log of the mask’s 2D pixel area. This prevents large scales from dominating the sampling process, since larger masks can be chosen via more pixels.</p></li>
+<li><p>During mask selection, they coordinate the random scale chosen across rays in the same image to increase the probability of positive pairs. To do this, they sample a single value between 0 and 1 per image, and index into each pixel’s mask probability CDF with the same value, ensuring pixels which land within the same group are assigned the same mask. Otherwise, the loss gets dominated by pushing forces which destabilize training.</p></li>
+</ol>
+</section>
+</section>
+<section id="hierarchical-decomposition" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchical-decomposition">Hierarchical Decomposition</h2>
+<p>Once GARField has optimized a scale-conditioned affinity field, it can generate a hierarchy of 3D groups, organized in a tree structure where each node can be broken into potential subgroups. This hierarchical decomposition is achieved through a recursive clustering process that decreases the scale for affinity, using HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise), a density-based clustering algorithm that doesn’t require a prior on the number of clusters.</p>
+<section id="process-overview" class="level3">
+<h3 class="anchored" data-anchor-id="process-overview">Process Overview</h3>
+<p>The hierarchical decomposition process can be broken down into several key steps:</p>
+<ol type="1">
+<li><p><strong>Initialization</strong>: The hierarchy is initialized by globally clustering features at a large scale (s_max), which is set to 1.0 for all experiments. This corresponds to the extent of the input cameras’ positions. These initial clusters form the top-level nodes in the scene decomposition.</p></li>
+<li><p><strong>Recursive Clustering</strong>: The process then iteratively reduces the scale by a fixed epsilon (set to 0.05 in the experiments) and runs HDBSCAN on each leaf node. If HDBSCAN returns more than one cluster for a given node, those clusters are added as children, and the process recurses on these new nodes.</p></li>
+<li><p><strong>Termination</strong>: This recursive process continues until the scale reaches 0, at which point the procedure terminates, returning the complete hierarchical tree.</p></li>
+</ol>
+</section>
+</section>
+<section id="experiments" class="level2">
+<h2 class="anchored" data-anchor-id="experiments">Experiments</h2>
+<p>The authors note that existing 3D scan datasets tend to focus on object-level scans (e.g.&nbsp;Google Scanned Objects, Partnet), are simulated (e.g.&nbsp;Contrastive Lift), or contain primarily indoor household scenes (e.g.&nbsp;Scannet). Since they want to assess GARField’s ability to decompose in-the-wild 3D scenes into hierarchical groups (which vary wideley in size and semantics), they instead use a wide variety of indoor and outdoor scenes from the Nerfstudio and LERF datasets, with special focus on scenes with significant object hierarchy.</p>
+<section id="qualitative-scene-decomposition" class="level3">
+<h3 class="anchored" data-anchor-id="qualitative-scene-decomposition">Qualitative Scene Decomposition</h3>
+<p>To visualize the decomposition, the authors use Gaussian Splatting to query GARField’s affinity field at gaussian centers. This approach is chosen because gaussian splats are easier to segment in 3D compared to NeRFs.</p>
+<p>Two types of hierarchical clustering results are visualized:</p>
+<ol type="1">
+<li><p>Global clustering at a coarse scale, followed by selecting groups corresponding to a few objects and further decomposing them into subgroups at successively decreasing scales.</p></li>
+<li><p>Tree decomposition, where a single object is selected from the global clustering and then broken down into a hierarchy of subparts.</p></li>
+</ol>
+<p>The results show that GARField achieves high-fidelity 3D groupings across a wide range of scenes and objects, from man-made objects (like keyboards and Lego models) to complex natural objects (like plants). By varying the scale, GARField can separate objects at different levels of granularity, such as distinguishing between a succulent and its pot, or identifying individual components of a toy.</p>
+</section>
+<section id="quantitative-hierarchy" class="level3">
+<h3 class="anchored" data-anchor-id="quantitative-hierarchy">Quantitative Hierarchy</h3>
+<p>(WIP, coming soon…)</p>
+<!-- The authors quantitatively evaluate GARField against annotated images using two metrics:
+
+1. 3D Completeness: This metric measures view consistency against annotations from multiple views. It's designed to evaluate whether groups correspond to complete 3D objects rather than just partial views.
+
+2. Hierarchical Grouping Recall: This metric measures the recall of various hierarchical masks via mean Intersection over Union (mIOU) against ground truth human annotations.
+
+#### 3D Completeness
+
+To evaluate 3D completeness, the authors choose a 3D point to be projected into 3 different viewpoints and label 3 corresponding view-consistent ground truth masks containing that point at coarse, medium, and fine levels. They then mine multiple masks from GARField across multiple scales and compare against SAM (Segment Anything Model) by clicking the point in the image and taking all 3 masks.
+
+The results show that GARField produces more complete 3D masks than SAM across viewpoints, resulting in higher mIOU with multi-view human annotations of objects. This effect is especially apparent at the most granular level, where SAM sometimes struggles to produce fine groups from certain perspectives.
+
+#### Hierarchical Grouping Recall
+
+For this experiment, the authors choose one novel viewpoint for each of 5 scenes and label up to 3 ground truth hierarchical groups for 1-2 objects. GARField outputs a set of masks by clustering image-space features, outputting one mask per tree node. This is compared against SAM's automatic mask generation.
+
+The results show that because GARField has fused groups from multiple perspectives, it results in higher fidelity groupings than any single view of SAM, leading to higher mIOU with annotations. The authors also perform ablation studies, demonstrating that both scale conditioning and scale densification are necessary for high-quality groupings.
+
+## Applications
+
+The authors demonstrate two key applications of GARField:
+
+1. Hierarchical 3D Asset Extraction: GARField can extract both entire objects (like an excavator) and their subparts (like the crane or wheels) as 3D assets. This capability could be valuable for 3D modeling and scene understanding tasks.
+
+2. Interactive Segmentation: Users can interact with GARField using clicks to extract groups of different sizes. This allows for intuitive and flexible exploration of the scene hierarchy.
+
+## Limitations
+
+The authors acknowledge several limitations of GARField:
+
+1. Dependency on 2D mask generator: If the input masks fail to contain a desired group, it won't emerge in 3D.
+
+2. Uneven viewpoint coverage: Regions with uneven viewpoints can suffer from artificial group boundaries.
+
+3. Ambiguity within a single scale: Multiple valid groupings may exist at the same scale, which the current approach doesn't handle.
+
+4. Separation of different-sized parts: Object parts of different sizes may appear at different levels of the tree rather than grouped together.
+
+5. Naive tree generation: The current greedy algorithm for tree generation can result in spurious small groups at deeper levels.
+
+## Conclusion
+
+GARField presents a novel approach for distilling multi-level masks into a dense scale-conditioned affinity field for hierarchical 3D scene decomposition. By leveraging scale-conditioning, the affinity field can learn meaningful groups from conflicting 2D group inputs and break apart the scene at multiple different levels. This capability opens up exciting possibilities for applications in robotics, dynamic scene reconstruction, and scene editing.
+
+The method's ability to produce view-consistent, hierarchical 3D groupings represents a significant advancement over traditional 2D segmentation approaches. However, there's still room for improvement, particularly in handling ambiguities within scales and refining the tree generation process.
+
+As the field of 3D scene understanding continues to evolve, techniques like GARField that can bridge the gap between 2D inputs and 3D understanding will likely play an increasingly important role in enabling more sophisticated interactions with and analyses of complex 3D environments. -->
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>nerf</category>
+  <category>wip</category>
+  <category>gaussian_splatting</category>
+  <guid>https://www.saeejithnair.github.io/blog/posts/garfield/</guid>
+  <pubDate>Tue, 06 Aug 2024 04:00:00 GMT</pubDate>
+  <media:content url="https://www.saeejithnair.github.io/assets/posts/in_progress.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Exploring 2D Gaussian Splatting</title>
+  <dc:creator>Saeejith Nair</dc:creator>
+  <link>https://www.saeejithnair.github.io/blog/posts/2d_gaussian_splatting/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Coming soon… <!-- # 2D Gaussian Splatting: A Deep Dive into the Core Function
+
+In this post, we're going to dissect the `generate_2D_gaussian_splatting` function, which is at the heart of a 2D Gaussian Splatting implementation. We'll go through each part of the function, explain what it does, and delve into the mathematics behind it.
+
+## Function Signature and Input Parameters
+
+```python
+def generate_2D_gaussian_splatting(kernel_size, sigma_x, sigma_y, rho, coords, colours, image_size=(256, 256, 3), device="cpu"):
+```
+
+Let's break down these parameters:
+
+- `kernel_size`: The size of the Gaussian kernel (an odd integer, typically).
+- `sigma_x`, `sigma_y`: Control the spread of the Gaussian in x and y directions.
+- `rho`: The correlation coefficient between x and y (-1 ≤ ρ ≤ 1).
+- `coords`: The coordinates where to place the Gaussians.
+- `colours`: The colors of each Gaussian.
+- `image_size`: The size of the output image (default: 256x256 RGB).
+- `device`: The device to perform computations on (CPU or GPU).
+
+## Setting Up the Covariance Matrix
+
+```python
+batch_size = colours.shape[0]
+sigma_x = sigma_x.view(batch_size, 1, 1)
+sigma_y = sigma_y.view(batch_size, 1, 1)
+rho = rho.view(batch_size, 1, 1)
+
+covariance = torch.stack(
+    [torch.stack([sigma_x**2, rho*sigma_x*sigma_y], dim=-1),
+     torch.stack([rho*sigma_x*sigma_y, sigma_y**2], dim=-1)],
+    dim=-2
+)
+```
+
+Here, we're constructing the covariance matrix for each Gaussian in the batch. The covariance matrix is a fundamental concept in multivariate statistics, describing the shape and orientation of the Gaussian distribution.
+
+For a 2D Gaussian, the covariance matrix $\Sigma$ is given by:
+
+$$
+\Sigma = \begin{bmatrix} 
+\sigma_x^2 & \rho\sigma_x\sigma_y \\
+\rho\sigma_x\sigma_y & \sigma_y^2 
+\end{bmatrix}
+$$
+
+Where:
+- $\sigma_x$ and $\sigma_y$ are the standard deviations in x and y directions, controlling the spread of the Gaussian.
+- $\rho$ is the correlation coefficient, controlling the orientation of the Gaussian.
+
+The covariance matrix encapsulates three key properties of the Gaussian:
+1. The variances $\sigma_x^2$ and $\sigma_y^2$ along the main diagonal represent the spread in each direction.
+2. The off-diagonal elements $\rho\sigma_x\sigma_y$ represent the covariance between x and y, determining the orientation of the Gaussian.
+3. The determinant of $\Sigma$ is related to the overall area or spread of the Gaussian.
+
+## Ensuring Positive Semi-Definiteness
+
+```python
+determinant = (sigma_x**2) * (sigma_y**2) - (rho * sigma_x * sigma_y)**2
+if (determinant <= 0).any():
+    raise ValueError("Covariance matrix must be positive semi-definite")
+```
+
+A valid covariance matrix must be positive semi-definite. This property ensures that the Gaussian distribution is well-defined and has non-negative variance in any direction.
+
+Mathematically, for a 2x2 matrix, positive semi-definiteness is ensured if:
+
+1. All diagonal elements are non-negative: $\sigma_x^2 \geq 0$ and $\sigma_y^2 \geq 0$
+2. The determinant is non-negative: $\det(\Sigma) = \sigma_x^2\sigma_y^2 - (\rho\sigma_x\sigma_y)^2 \geq 0$
+
+The second condition implies that $-1 \leq \rho \leq 1$, which aligns with the definition of correlation coefficient.
+
+This check is crucial because an invalid covariance matrix could lead to undefined behavior in subsequent calculations, such as taking the square root of a negative number or inverting a singular matrix.
+
+## Inverse Covariance Matrix
+
+```python
+inv_covariance = torch.inverse(covariance)
+```
+
+We calculate the inverse of the covariance matrix, which we'll need later for the Gaussian function. The inverse covariance matrix, often denoted as $\Sigma^{-1}$, plays a crucial role in the multivariate Gaussian probability density function.
+
+For a 2x2 matrix, the inverse can be calculated analytically:
+
+$$
+\Sigma^{-1} = \frac{1}{\det(\Sigma)} \begin{bmatrix} 
+\sigma_y^2 & -\rho\sigma_x\sigma_y \\
+-\rho\sigma_x\sigma_y & \sigma_x^2 
+\end{bmatrix}
+$$
+
+The inverse covariance matrix is used in the exponent of the Gaussian function and determines the shape and orientation of the level curves of the distribution.
+
+## Creating the Kernel Grid
+
+```python
+start = torch.tensor([-5.0], device=device).view(-1, 1)
+end = torch.tensor([5.0], device=device).view(-1, 1)
+base_linspace = torch.linspace(0, 1, steps=kernel_size, device=device)
+ax_batch = start + (end - start) * base_linspace
+
+ax_batch_expanded_x = ax_batch.unsqueeze(-1).expand(-1, -1, kernel_size)
+ax_batch_expanded_y = ax_batch.unsqueeze(1).expand(-1, kernel_size, -1)
+
+xx, yy = ax_batch_expanded_x, ax_batch_expanded_y
+```
+
+This section creates a grid for our Gaussian kernel. We use a range of [-5, 5] for both x and y dimensions, which covers most of the significant area of a standard normal distribution.
+
+The choice of [-5, 5] is based on the properties of the normal distribution:
+- Approximately 68% of the distribution lies within 1 standard deviation of the mean.
+- Approximately 95% lies within 2 standard deviations.
+- Approximately 99.7% lies within 3 standard deviations.
+
+By using a range of [-5, 5], we ensure that we capture virtually all of the Gaussian's significant values, even for Gaussians with larger standard deviations.
+
+## Calculating the Gaussian Function
+
+```python
+xy = torch.stack([xx, yy], dim=-1)
+z = torch.einsum('b...i,b...ij,b...j->b...', xy, -0.5 * inv_covariance, xy)
+kernel = torch.exp(z) / (2 * torch.tensor(np.pi, device=device) * torch.sqrt(torch.det(covariance)).view(batch_size, 1, 1))
+```
+
+This is where we calculate the actual Gaussian function. The multivariate Gaussian probability density function is given by:
+
+$$
+f(x,y) = \frac{1}{2\pi|\Sigma|^{1/2}} \exp\left(-\frac{1}{2} [x \quad y] \Sigma^{-1} \begin{bmatrix} x \\ y \end{bmatrix}\right)
+$$
+
+Where $|\Sigma|$ is the determinant of the covariance matrix.
+
+Let's break down this formula:
+
+1. $\frac{1}{2\pi|\Sigma|^{1/2}}$ is the normalization factor, ensuring that the total probability over all space is 1.
+2. $\exp(\cdot)$ is the exponential function.
+3. $-\frac{1}{2} [x \quad y] \Sigma^{-1} \begin{bmatrix} x \\ y \end{bmatrix}$ is the quadratic form in the exponent, which determines the shape of the Gaussian.
+
+The `torch.einsum` function is used for efficient batch matrix multiplication, computing this quadratic form for each point in our grid and for each Gaussian in the batch.
+
+## Normalizing the Kernel
+
+```python
+kernel_max_1, _ = kernel.max(dim=-1, keepdim=True)
+kernel_max_2, _ = kernel_max_1.max(dim=-2, keepdim=True)
+kernel_normalized = kernel / kernel_max_2
+```
+
+We normalize the kernel by its maximum value. This ensures that the highest point of each Gaussian has a value of 1. This step is crucial for several reasons:
+
+1. It ensures consistency across different Gaussians, regardless of their parameters.
+2. It simplifies the process of combining multiple Gaussians, as they all have the same peak value.
+3. It allows for easier control of the Gaussian's contribution to the final image through color multiplication.
+
+## Preparing the Kernel for RGB
+
+```python
+kernel_reshaped = kernel_normalized.repeat(1, 3, 1).view(batch_size * 3, kernel_size, kernel_size)
+kernel_rgb = kernel_reshaped.unsqueeze(0).reshape(batch_size, 3, kernel_size, kernel_size)
+```
+
+Here, we're preparing the kernel for RGB colors by repeating it three times (for R, G, and B channels) and reshaping. This step allows us to apply different colors to each Gaussian later in the process.
+
+## Padding the Kernel
+
+```python
+pad_h = image_size[0] - kernel_size
+pad_w = image_size[1] - kernel_size
+if pad_h < 0 or pad_w < 0:
+    raise ValueError("Kernel size should be smaller or equal to the image size.")
+
+padding = (pad_w // 2, pad_w // 2 + pad_w % 2,  # padding left and right
+           pad_h // 2, pad_h // 2 + pad_h % 2)  # padding top and bottom
+kernel_rgb_padded = torch.nn.functional.pad(kernel_rgb, padding, "constant", 0)
+```
+
+We pad the kernel to match the desired image size. This allows us to place the Gaussian anywhere in the image. The padding is crucial because:
+
+1. It ensures that the Gaussian can be centered at any pixel in the image, including those near the edges.
+2. It maintains the full shape of the Gaussian, even when it's placed near the image boundaries.
+3. It allows for efficient batch processing of multiple Gaussians simultaneously.
+
+## Translating the Kernel: A Deep Dive into Affine Transformations
+
+In this section, we'll explore how the Gaussian kernels are positioned in the image using affine transformations. This is a crucial step in the Gaussian Splatting process, as it allows us to place each Gaussian at its specified location efficiently.
+
+### Mathematical Background: Affine Transformations
+
+An affine transformation is a linear mapping method that preserves points, straight lines, and planes. In 2D, it can be represented as a 2x3 matrix:
+
+$$
+\begin{bmatrix} 
+a & b & t_x \\
+c & d & t_y
+\end{bmatrix}
+$$
+
+This matrix can represent scaling, rotation, shearing, and translation. In our case, we're primarily interested in translation, so our matrix simplifies to:
+
+$$
+\begin{bmatrix} 
+1 & 0 & t_x \\
+0 & 1 & t_y
+\end{bmatrix}
+$$
+
+Where $(t_x, t_y)$ represents the translation in x and y directions.
+
+### Code Breakdown
+
+Let's break down the code and explain each part:
+
+```python
+b, c, h, w = kernel_rgb_padded.shape
+theta = torch.zeros(b, 2, 3, dtype=torch.float32, device=device)
+theta[:, 0, 0] = 1.0
+theta[:, 1, 1] = 1.0
+theta[:, :, 2] = coords
+```
+
+1. `b, c, h, w = kernel_rgb_padded.shape`: This extracts the dimensions of our padded kernel. `b` is the batch size (number of Gaussians), `c` is the number of channels (3 for RGB), and `h` and `w` are the height and width of the image.
+
+2. `theta = torch.zeros(b, 2, 3, dtype=torch.float32, device=device)`: This creates a batch of 2x3 affine transformation matrices, initialized to zero.
+
+3. `theta[:, 0, 0] = 1.0` and `theta[:, 1, 1] = 1.0`: This sets the scaling factors to 1, ensuring no scaling occurs.
+
+4. `theta[:, :, 2] = coords`: This is where the translation happens. `coords` is a tensor of shape `(b, 2)`, where each row represents the (x, y) coordinates where a Gaussian should be placed. These values are placed in the last column of `theta`, corresponding to $t_x$ and $t_y$ in our affine transformation matrix.
+
+### Affine Grid and Grid Sampling
+
+```python
+grid = F.affine_grid(theta, size=(b, c, h, w), align_corners=True)
+kernel_rgb_padded_translated = F.grid_sample(kernel_rgb_padded, grid, align_corners=True)
+```
+
+These two lines are where the actual transformation occurs:
+
+1. `F.affine_grid(theta, size=(b, c, h, w), align_corners=True)`:
+   - This function takes our batch of affine transformation matrices (`theta`) and the desired output size.
+   - It generates a sampling grid for each input in the batch.
+   - The sampling grid tells us, for each output pixel, where we should sample from in the input image.
+   - `align_corners=True` ensures that the extreme values (-1 and 1) in the generated grid correspond to the centers of the corner pixels of the input and output.
+
+2. `F.grid_sample(kernel_rgb_padded, grid, align_corners=True)`:
+   - This function applies the sampling grid to our input tensor (`kernel_rgb_padded`).
+   - For each point in the output tensor, it computes the input value using bilinear interpolation of the values at the four nearest pixels.
+   - The result is our translated Gaussian kernels.
+
+# Affine Grid and Grid Sampling: A Step-by-Step Explanation
+
+Let's break down the concepts of affine grid and grid sampling to their most basic elements, using a very simple example.
+
+## 1. The Problem We're Solving
+
+Imagine we have a 3x3 image of a smiley face:
+
+```
+[[ 0,  0,  0],
+ [ 0,  1,  0],
+ [ 1,  0,  1]]
+```
+
+We want to move this image one pixel to the right. Our desired output would be:
+
+```
+[[ 0,  0,  0],
+ [ 0,  0,  1],
+ [ 0,  1,  0]]
+```
+
+How can we achieve this using affine grid and grid sampling?
+
+## 2. Affine Grid (F.affine_grid)
+
+### What it does:
+`F.affine_grid` creates a grid that tells us, for each pixel in our output image, where we should look in the input image to get the color.
+
+### Step-by-step:
+
+a) First, we create our transformation matrix. To move one pixel right, we use:
+   ```
+   [[1, 0, -1],
+    [0, 1,  0]]
+   ```
+   The -1 in the top-right means "move left by 1 pixel", which effectively moves the image right.
+
+b) We call `F.affine_grid` with this matrix and our desired output size (3x3).
+
+c) It returns a grid like this:
+   ```
+   [[[[-1, -1, -1],  # x-coordinates
+     [-2, -2, -2],
+     [-3, -3, -3]],
+
+    [[-1, -2, -3],  # y-coordinates
+     [-1, -2, -3],
+     [-1, -2, -3]]]]
+   ```
+
+d) What does this grid mean?
+   - For the pixel at (0,0) in our output, look at (-1,-1) in our input.
+   - For the pixel at (0,1) in our output, look at (-1,-2) in our input.
+   - And so on...
+
+## 3. Grid Sampling (F.grid_sample)
+
+### What it does:
+`F.grid_sample` uses the grid we just created to actually move the pixels from the input to the output.
+
+### Step-by-step:
+
+a) For each point in our grid, `F.grid_sample` looks at the corresponding location in the input image.
+
+b) If the coordinates are exactly on a pixel, it just takes that pixel's value.
+
+c) If the coordinates are between pixels, it interpolates (takes a weighted average of nearby pixels).
+
+d) In our example:
+   - Output (0,0) looks at input (-1,-1). This is outside our image, so it's treated as 0.
+   - Output (0,1) looks at input (-1,-2). Also outside, so 0.
+   - Output (1,1) looks at input (-2,-2). Outside, so 0.
+   - Output (1,2) looks at input (-2,-3). This corresponds to input (1,0), which has value 1.
+   - And so on...
+
+e) After doing this for all pixels, we get our desired output:
+   ```
+   [[ 0,  0,  0],
+    [ 0,  0,  1],
+    [ 0,  1,  0]]
+   ```
+
+## 4. Why Use This Approach?
+
+1. **Flexibility**: This method can handle any kind of 2D transformation, not just simple translations.
+
+2. **Smooth Transformations**: The interpolation allows for smooth movement, even when we're not moving by whole pixel amounts.
+
+3. **Efficiency**: This process happens for all pixels simultaneously, which is very fast on GPUs.
+
+## 5. Back to Gaussian Splatting
+
+In our Gaussian Splatting code:
+
+```python
+grid = F.affine_grid(theta, size=(b, c, h, w), align_corners=True)
+kernel_rgb_padded_translated = F.grid_sample(kernel_rgb_padded, grid, align_corners=True)
+```
+
+- `theta` contains the transformation matrices for all our Gaussians.
+- `F.affine_grid` creates a grid for each Gaussian.
+- `F.grid_sample` then moves each Gaussian according to its grid.
+
+The `align_corners=True` parameter is a technical detail that affects how the extreme values in the grid are interpreted. It ensures that the corners of the input and output are aligned.
+
+### Mathematical Interpretation
+
+What's happening here can be thought of as a coordinate transformation. Let's say we have a point $(x, y)$ in our original kernel. The affine transformation applies as follows:
+
+$$
+\begin{bmatrix} 
+x' \\
+y' \\
+1
+\end{bmatrix} = 
+\begin{bmatrix} 
+1 & 0 & t_x \\
+0 & 1 & t_y \\
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix} 
+x \\
+y \\
+1
+\end{bmatrix}
+$$
+
+Resulting in:
+$$
+x' = x + t_x \\
+y' = y + t_y
+$$
+
+This effectively moves each point in our kernel by $(t_x, t_y)$, which are the coordinates specified in `coords`.
+
+
+## Applying Colors and Combining
+
+```python
+rgb_values_reshaped = colours.unsqueeze(-1).unsqueeze(-1)
+final_image_layers = rgb_values_reshaped * kernel_rgb_padded_translated
+final_image = final_image_layers.sum(dim=0)
+final_image = torch.clamp(final_image, 0, 1)
+final_image = final_image.permute(1,2,0)
+```
+
+Finally, we apply the specified colors to each Gaussian, sum all the Gaussians to create the final image, clamp the values between 0 and 1, and rearrange the dimensions to match the expected image format.
+
+This step is where the actual "splatting" occurs:
+1. Each Gaussian is multiplied by its corresponding color.
+2. All colored Gaussians are summed together to form the final image.
+3. The values are clamped to ensure they're in the valid range for image representation.
+
+## Conclusion
+
+This function is the core of 2D Gaussian Splatting. It takes a set of Gaussians defined by their positions, shapes, and colors, and renders them onto an image. The key steps are:
+
+1. Defining the Gaussian kernels based on the covariance matrices.
+2. Creating a grid and calculating the Gaussian function on this grid.
+3. Normalizing and preparing the kernels for RGB colors.
+4. Translating the kernels to their specified positions in the image.
+5. Applying colors and combining all Gaussians to form the final image.
+
+The power of this approach lies in its ability to represent complex images with a relatively small number of parameters (position, shape, and color of each Gaussian). By optimizing these parameters, we can create efficient and flexible representations of images.
+
+In a full Gaussian Splatting system, this function would be used within a larger optimization loop that adjusts the Gaussian parameters to best represent a target image. The optimization process might also involve adding or removing Gaussians as needed to improve the representation. --></p>
+
+
+
+ ]]></description>
+  <category>gaussian_splatting</category>
+  <category>research</category>
+  <category>wip</category>
+  <guid>https://www.saeejithnair.github.io/blog/posts/2d_gaussian_splatting/</guid>
+  <pubDate>Wed, 31 Jul 2024 04:00:00 GMT</pubDate>
+  <media:content url="https://www.saeejithnair.github.io/assets/posts/in_progress.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Elastic-NeRF</title>
   <dc:creator>Saeejith Nair</dc:creator>
