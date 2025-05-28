@@ -20,7 +20,7 @@ about:
           url: https://github.com/saeejithnair
         - icon: twitter
           text: Twitter
-          url: https://twitter.com/saeejithn
+          url: https://twitter.com/sighjith
         - icon: mortarboard-fill
           text: Google Scholar
           url: https://scholar.google.com/citations?user=c1h8n9sAAAAJ
