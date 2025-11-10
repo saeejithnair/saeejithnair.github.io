@@ -9,7 +9,7 @@
 <link>https://www.saeejithnair.github.io/projects/</link>
 <atom:link href="https://www.saeejithnair.github.io/projects/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.4.537</generator>
+<generator>quarto-1.8.25</generator>
 <lastBuildDate>Tue, 09 Jan 2024 05:00:00 GMT</lastBuildDate>
 <item>
   <title>Elastic-NeRF</title>

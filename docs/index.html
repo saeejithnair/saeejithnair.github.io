@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.537">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -32,14 +32,16 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-listing/list.min.js"></script>
 <script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -107,7 +109,7 @@ gtag('config', 'G-JYHXLHGZEH', { 'anonymize_ip': true});
 </script>
 <style>html{ scroll-behavior: smooth; }</style>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -121,7 +123,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -148,19 +150,21 @@ window.Quarto = {
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Saeejith Nair</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -179,7 +183,7 @@ window.Quarto = {
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -197,7 +201,7 @@ window.Quarto = {
   <li><a href="#industry-experience" id="toc-industry-experience" class="nav-link" data-scroll-target="#industry-experience">Industry Experience</a>
   <ul class="collapse">
   <li><a href="#nuro.ai-software-engineering-intern" id="toc-nuro.ai-software-engineering-intern" class="nav-link" data-scroll-target="#nuro.ai-software-engineering-intern">Nuro.ai | <em>Software Engineering Intern</em></a></li>
-  <li><a href="#brain-lab-undergraduate-researcher" id="toc-brain-lab-undergraduate-researcher" class="nav-link" data-scroll-target="#brain-lab-undergraduate-researcher">BRAIN Lab | <em>Undergraduate Researcher</em></a></li>
+  <li><a href="#brain-lab-university-of-waterloo-undergraduate-researcher" id="toc-brain-lab-university-of-waterloo-undergraduate-researcher" class="nav-link" data-scroll-target="#brain-lab-university-of-waterloo-undergraduate-researcher">BRAIN Lab, University of Waterloo | <em>Undergraduate Researcher</em></a></li>
   <li><a href="#nuro.ai-software-engineering-intern-1" id="toc-nuro.ai-software-engineering-intern-1" class="nav-link" data-scroll-target="#nuro.ai-software-engineering-intern-1">Nuro.ai | <em>Software Engineering Intern </em></a></li>
   <li><a href="#arcturus-networks-embedded-machine-vision-developer-intern" id="toc-arcturus-networks-embedded-machine-vision-developer-intern" class="nav-link" data-scroll-target="#arcturus-networks-embedded-machine-vision-developer-intern">Arcturus Networks | <em>Embedded Machine Vision Developer Intern</em></a></li>
   <li><a href="#curtiss-wright-defense-solutions-embedded-software-engineering-intern" id="toc-curtiss-wright-defense-solutions-embedded-software-engineering-intern" class="nav-link" data-scroll-target="#curtiss-wright-defense-solutions-embedded-software-engineering-intern">Curtiss-Wright Defense Solutions | <em>Embedded Software Engineering Intern</em></a></li>
@@ -211,7 +215,7 @@ window.Quarto = {
 </nav>
     </div>
 <!-- main -->
-<div class="quarto-about-trestles content column-page-left">
+<div class="quarto-about-trestles column-page-left">
   <div class="about-entity">
     <img src="assets/Neurips_23_headshot.jpg" class="about-image
   rounded " style="width: 20em;">
@@ -249,38 +253,31 @@ window.Quarto = {
 
 <section id="bio" class="level2">
 <h2 data-anchor-id="bio">Bio</h2>
-<p>I’m currently an MASc candidate in Systems Design Engineering at UWaterloo’s Vision and Image Processing Lab, advised by Prof.&nbsp;<a href="https://www.eng.uwaterloo.ca/~a28wong/index.html">Alexander Wong</a> and Prof.&nbsp;<a href="https://vip.uwaterloo.ca/m-shafiee/">Javad Shafiee</a>. My research has focused on projects at the intersection of <strong>efficient ML</strong> (specifically applying neural architecture search to NeRFs and vision transformers), <strong>embedded systems</strong> (latency prediction for on-device inference), and <strong>robotics</strong> (building simulation pipelines for synthetic data generation, training embodied morphologies, and dexterous manipulation). <strong>I’m interested in building embodied systems that can efficiently learn to interact with the world in an open-ended manner.</strong></p>
-<p>I previously graduated from the University of Waterloo with a BASc in Mechatronics Engineering with an Option in Artificial Intelligence. As an undergraduate, I’ve interned as a software engineer across the full systems stack including sensor processing and communications infrastructure on self-driving cars, simulators for robot grasping, real-time video analytics applications for embedded microcontrollers, safety-critical bootloader firmware for aerospace products, silicon validation for AI accelerators, and web development for e-commerce.</p>
-<p>I’m currently looking for new opportunities to build the next generation (and beyond) of robotics. If you’re working on something interesting, or want to learn more, I’d love to chat!</p>
+<p>I’m a first year PhD student in Systems Design Engineering at UWaterloo’s Vision and Image Processing Lab. I’m advised by Prof.&nbsp;<a href="https://www.eng.uwaterloo.ca/~a28wong/index.html">Alexander Wong</a> and Prof.&nbsp;<a href="https://yhc-1.github.io/yuhao-chen/">Yuhao Chen</a> and supported by an NSERC CGS-D award. My research has focused on projects at the intersection of <strong>efficient ML</strong> (specifically applying neural architecture search to NeRFs and vision transformers), <strong>embedded systems</strong> (latency prediction for on-device inference), and <strong>robotics</strong> (building simulation pipelines for synthetic data generation, training embodied morphologies, and dexterous manipulation). <strong>I’m interested in building embodied systems that can efficiently learn to interact with the world in an open-ended manner.</strong></p>
+<p>I previously graduated from the University of Waterloo with a MASc in Systems Design Engineering and a BASc in Mechatronics Engineering with an Option in Artificial Intelligence. I have industry experience as a software engineer and AI researcher working across the full systems stack including sensor processing and communications infrastructure on self-driving cars, teleoperation &amp; imitation learning for humanoid robots, simulators for robot grasping, real-time video analytics applications for embedded microcontrollers, safety-critical bootloader firmware for aerospace products, silicon validation for AI accelerators, and web development for e-commerce.</p>
 </section>
 <section id="recent-projects" class="level2">
 <h2 data-anchor-id="recent-projects">Recent Projects</h2>
 <p>Check out my <a href="projects/">projects page</a> for more!</p>
 <div id="listing-landing-projects" class="quarto-listing quarto-listing-container-grid">
 <div class="list grid quarto-listing-cols-2">
-<div class="g-col-1" data-index="0" data-categories="nerf,elastic,wip" data-listing-date-sort="1704776400000">
+<div class="g-col-1" data-index="0" data-categories="bmVyZiUyQ2VsYXN0aWMlMkN3aXA=" data-listing-date-sort="1704776400000">
 <a href="./blog/posts/elastic_nerf" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img src="./assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg" class="thumbnail-image card-img" style="height: 150px;">
+<img loading="lazy" src="./assets/posts/elastic_nerf/elastic_nerfacc_instant_ngp.jpeg" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
 Elastic-NeRF
 </h5>
 <div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('nerf'); return false;">
-nerf
+<div class="listing-category" onclick="window.quartoListingCategory('bmVyZg=='); return false;">nerf</div>
+<div class="listing-category" onclick="window.quartoListingCategory('ZWxhc3RpYw=='); return false;">elastic</div>
+<div class="listing-category" onclick="window.quartoListingCategory('d2lw'); return false;">wip</div>
 </div>
-<div class="listing-category" onclick="window.quartoListingCategory('elastic'); return false;">
-elastic
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('wip'); return false;">
-wip
-</div>
-</div>
-<div class="card-text listing-description">
-Making NeRFs even more compact and efficient using an elastic architecture (and no additional training cost)!
+<div class="card-text listing-description delink">
+<p>Making NeRFs even more compact and efficient using an elastic architecture (and no additional training cost)!</p>
 </div>
 <div class="card-attribution card-text-small end">
 <div class="listing-date">
@@ -288,32 +285,25 @@ Jan 9, 2024
 </div>
 </div>
 </div>
+</div></a>
 </div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="nerf,nas,neurips workshop" data-listing-date-sort="1702270800000">
+<div class="g-col-1" data-index="1" data-categories="bmVyZiUyQ25hcyUyQ25ldXJpcHMlMjB3b3Jrc2hvcA==" data-listing-date-sort="1702270800000">
 <a href="https://saeejithnair.github.io/NAS-NeRF/" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img src="./assets/projects/nas_nerf/nas_nerf_horizontal.gif" class="thumbnail-image card-img" style="height: 150px;">
+<img loading="lazy" src="./assets/projects/nas_nerf/nas_nerf_horizontal.gif" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
 NAS-NeRF
 </h5>
 <div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('nerf'); return false;">
-nerf
+<div class="listing-category" onclick="window.quartoListingCategory('bmVyZg=='); return false;">nerf</div>
+<div class="listing-category" onclick="window.quartoListingCategory('bmFz'); return false;">nas</div>
+<div class="listing-category" onclick="window.quartoListingCategory('bmV1cmlwcyUyMHdvcmtzaG9w'); return false;">neurips workshop</div>
 </div>
-<div class="listing-category" onclick="window.quartoListingCategory('nas'); return false;">
-nas
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('neurips workshop'); return false;">
-neurips workshop
-</div>
-</div>
-<div class="card-text listing-description">
-We introduce a generative neural architecture search strategy that generates compact, scene-specialized NeRF architectures.
+<div class="card-text listing-description delink">
+<p>We introduce a generative neural architecture search strategy that generates compact, scene-specialized NeRF architectures.</p>
 </div>
 <div class="card-attribution card-text-small end">
 <div class="listing-date">
@@ -321,29 +311,24 @@ Dec 11, 2023
 </div>
 </div>
 </div>
+</div></a>
 </div>
-</a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="synthetic data,neurips workshop" data-listing-date-sort="1702270800000">
+<div class="g-col-1" data-index="2" data-categories="c3ludGhldGljJTIwZGF0YSUyQ25ldXJpcHMlMjB3b3Jrc2hvcA==" data-listing-date-sort="1702270800000">
 <a href="https://saeejithnair.github.io/nvsynth/" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img src="./assets/projects/nvsynth/nvsynth_procedural_plating.gif" class="thumbnail-image card-img" style="height: 150px;">
+<img loading="lazy" src="./assets/projects/nvsynth/nvsynth_procedural_plating.gif" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
 NV-Synth
 </h5>
 <div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('synthetic data'); return false;">
-synthetic data
+<div class="listing-category" onclick="window.quartoListingCategory('c3ludGhldGljJTIwZGF0YQ=='); return false;">synthetic data</div>
+<div class="listing-category" onclick="window.quartoListingCategory('bmV1cmlwcyUyMHdvcmtzaG9w'); return false;">neurips workshop</div>
 </div>
-<div class="listing-category" onclick="window.quartoListingCategory('neurips workshop'); return false;">
-neurips workshop
-</div>
-</div>
-<div class="card-text listing-description">
-We introduce a large-scale synthetic food image dataset for nutrition estimation. NV-Synth contains 84,984 photorealistic meal images rendered from 7,082 dynamically plated…
+<div class="card-text listing-description delink">
+<p>We introduce a large-scale synthetic food image dataset for nutrition estimation. NV-Synth contains 84,984 photorealistic meal images rendered from 7,082 dynamically plated…</p>
 </div>
 <div class="card-attribution card-text-small end">
 <div class="listing-date">
@@ -351,32 +336,25 @@ Dec 11, 2023
 </div>
 </div>
 </div>
+</div></a>
 </div>
-</a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="RL,evolution,cvis" data-listing-date-sort="1702011600000">
+<div class="g-col-1" data-index="3" data-categories="UkwlMkNldm9sdXRpb24lMkNjdmlz" data-listing-date-sort="1702011600000">
 <a href="https://saeejithnair.github.io/darlei/" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img src="./assets/projects/darlei/DARLEIDemo4.gif" class="thumbnail-image card-img" style="height: 150px;">
+<img loading="lazy" src="./assets/projects/darlei/DARLEIDemo4.gif" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
 DARLEI
 </h5>
 <div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('RL'); return false;">
-RL
+<div class="listing-category" onclick="window.quartoListingCategory('Ukw='); return false;">RL</div>
+<div class="listing-category" onclick="window.quartoListingCategory('ZXZvbHV0aW9u'); return false;">evolution</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Y3Zpcw=='); return false;">cvis</div>
 </div>
-<div class="listing-category" onclick="window.quartoListingCategory('evolution'); return false;">
-evolution
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('cvis'); return false;">
-cvis
-</div>
-</div>
-<div class="card-text listing-description">
-DARLEI combines evolutionary algorithms with parallelized reinforcement learning for efficiently training and evolving populations of UNIMAL agents.
+<div class="card-text listing-description delink">
+<p>DARLEI combines evolutionary algorithms with parallelized reinforcement learning for efficiently training and evolving populations of UNIMAL agents.</p>
 </div>
 <div class="card-attribution card-text-small end">
 <div class="listing-date">
@@ -384,32 +362,25 @@ Dec 8, 2023
 </div>
 </div>
 </div>
+</div></a>
 </div>
-</a>
-</div>
-<div class="g-col-1" data-index="4" data-categories="vit,nas,neurips workshop" data-listing-date-sort="1692676800000">
+<div class="g-col-1" data-index="4" data-categories="dml0JTJDbmFzJTJDbmV1cmlwcyUyMHdvcmtzaG9w" data-listing-date-sort="1692676800000">
 <a href="https://arxiv.org/abs/2308.11421" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img src="./assets/projects/turbo_vit/TurboViT.png" class="thumbnail-image card-img" style="height: 150px;">
+<img loading="lazy" src="./assets/projects/turbo_vit/TurboViT.png" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
 TurboViT
 </h5>
 <div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('vit'); return false;">
-vit
+<div class="listing-category" onclick="window.quartoListingCategory('dml0'); return false;">vit</div>
+<div class="listing-category" onclick="window.quartoListingCategory('bmFz'); return false;">nas</div>
+<div class="listing-category" onclick="window.quartoListingCategory('bmV1cmlwcyUyMHdvcmtzaG9w'); return false;">neurips workshop</div>
 </div>
-<div class="listing-category" onclick="window.quartoListingCategory('nas'); return false;">
-nas
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('neurips workshop'); return false;">
-neurips workshop
-</div>
-</div>
-<div class="card-text listing-description">
-We explore the generation of fast vision transformer architecture designs via generative architecture search to achieve a strong balance between accuracy and architectural…
+<div class="card-text listing-description delink">
+<p>We explore the generation of fast vision transformer architecture designs via generative architecture search to achieve a strong balance between accuracy and architectural…</p>
 </div>
 <div class="card-attribution card-text-small end">
 <div class="listing-date">
@@ -417,32 +388,25 @@ Aug 22, 2023
 </div>
 </div>
 </div>
+</div></a>
 </div>
-</a>
-</div>
-<div class="g-col-1" data-index="5" data-categories="edge-ml,latency prediction,cvpr workshop" data-listing-date-sort="1654056000000">
+<div class="g-col-1" data-index="5" data-categories="ZWRnZS1tbCUyQ2xhdGVuY3klMjBwcmVkaWN0aW9uJTJDY3ZwciUyMHdvcmtzaG9w" data-listing-date-sort="1654056000000">
 <a href="https://openaccess.thecvf.com/content/CVPR2022W/EVW/html/Nair_MAPLE-Edge_A_Runtime_Latency_Predictor_for_Edge_Devices_CVPRW_2022_paper.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img src="./assets/projects/maple_edge/maple_edge_overview_updated.png" class="thumbnail-image card-img" style="height: 150px;">
+<img loading="lazy" src="./assets/projects/maple_edge/maple_edge_overview_updated.png" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
 Maple-Edge
 </h5>
 <div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('edge-ml'); return false;">
-edge-ml
+<div class="listing-category" onclick="window.quartoListingCategory('ZWRnZS1tbA=='); return false;">edge-ml</div>
+<div class="listing-category" onclick="window.quartoListingCategory('bGF0ZW5jeSUyMHByZWRpY3Rpb24='); return false;">latency prediction</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Y3ZwciUyMHdvcmtzaG9w'); return false;">cvpr workshop</div>
 </div>
-<div class="listing-category" onclick="window.quartoListingCategory('latency prediction'); return false;">
-latency prediction
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('cvpr workshop'); return false;">
-cvpr workshop
-</div>
-</div>
-<div class="card-text listing-description">
-We propose MAPLE-Edge, an edge-device oriented latency predictor where we train a regression network on architecture-latency pairs in conjunction with a hardware-runtime…
+<div class="card-text listing-description delink">
+<p>We propose MAPLE-Edge, an edge-device oriented latency predictor where we train a regression network on architecture-latency pairs in conjunction with a hardware-runtime…</p>
 </div>
 <div class="card-attribution card-text-small end">
 <div class="listing-date">
@@ -450,72 +414,45 @@ Jun 1, 2022
 </div>
 </div>
 </div>
+</div></a>
 </div>
-</a>
 </div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
+<div class="listing-no-matching d-none">No matching items</div>
 </div>
 </section>
 <section id="industry-experience" class="level2">
 <h2 data-anchor-id="industry-experience">Industry Experience</h2>
 <section id="nuro.ai-software-engineering-intern" class="level3">
 <h3 data-anchor-id="nuro.ai-software-engineering-intern">Nuro.ai | <em>Software Engineering Intern</em></h3>
-<section id="mountain-view-ca-june---sept-2021" class="level5">
-<h5 data-anchor-id="mountain-view-ca-june---sept-2021">Mountain View, CA (June - Sept, 2021)</h5>
 <p>Brought up hardware accelerator, implemented efficient digital signal processing algorithms (in C) for radars on self-driving delivery robot, and developed testing architecture for radar HIL simulation chambers.</p>
 </section>
-</section>
-<section id="brain-lab-undergraduate-researcher" class="level3">
-<h3 data-anchor-id="brain-lab-undergraduate-researcher">BRAIN Lab | <em>Undergraduate Researcher</em></h3>
-<section id="university-of-waterloo-may---sept-2020" class="level5">
-<h5 data-anchor-id="university-of-waterloo-may---sept-2020">University of Waterloo (May - Sept, 2020)</h5>
+<section id="brain-lab-university-of-waterloo-undergraduate-researcher" class="level3">
+<h3 data-anchor-id="brain-lab-university-of-waterloo-undergraduate-researcher">BRAIN Lab, University of Waterloo | <em>Undergraduate Researcher</em></h3>
 <p>Developed a rigid-body grasping simulator in PyBullet and used synthetic demonstration data to train a planner for robotic assembly tasks.</p>
-</section>
 </section>
 <section id="nuro.ai-software-engineering-intern-1" class="level3">
 <h3 data-anchor-id="nuro.ai-software-engineering-intern-1">Nuro.ai | <em>Software Engineering Intern </em></h3>
-<section id="mountain-view-ca-jan---may-2020" class="level5">
-<h5 data-anchor-id="mountain-view-ca-jan---may-2020">Mountain View, CA (Jan - May, 2020)</h5>
 <p>Developed onboard and embedded communications infrastructure for radar driver module on self-driving delivery robot. Improved sensor data throughput and firmware upgrade speeds.</p>
-</section>
 </section>
 <section id="arcturus-networks-embedded-machine-vision-developer-intern" class="level3">
 <h3 data-anchor-id="arcturus-networks-embedded-machine-vision-developer-intern">Arcturus Networks | <em>Embedded Machine Vision Developer Intern</em></h3>
-<section id="toronto-on-may---aug-2019" class="level5">
-<h5 data-anchor-id="toronto-on-may---aug-2019">Toronto, ON (May - Aug, 2019)</h5>
 <p>Designed real-time, multithreaded video analysis application in C++ for low power embedded platform. Improved multi-object tracking algorithms and developed a library to accelerate CPU-based inference using ARM NEON intrinsics.</p>
-</section>
 </section>
 <section id="curtiss-wright-defense-solutions-embedded-software-engineering-intern" class="level3">
 <h3 data-anchor-id="curtiss-wright-defense-solutions-embedded-software-engineering-intern">Curtiss-Wright Defense Solutions | <em>Embedded Software Engineering Intern</em></h3>
-<section id="ottawa-on-sept---dec-2018" class="level5">
-<h5 data-anchor-id="ottawa-on-sept---dec-2018">Ottawa, ON (Sept - Dec, 2018)</h5>
 <p>Implemented, validated, and released features for U-Boot bootloaders. Drove debug and validation efforts across VxWorks &amp; Yocto Linux BSPs, BIOS, and bootloader products to meet release schedule.</p>
-</section>
 </section>
 <section id="centre-for-operational-research-and-analysis-drdc-research-engineer" class="level3">
 <h3 data-anchor-id="centre-for-operational-research-and-analysis-drdc-research-engineer">Centre for Operational Research and Analysis, DRDC | <em>Research Engineer</em></h3>
-<section id="ottawa-on-sept-2018---apr-2019" class="level5">
-<h5 data-anchor-id="ottawa-on-sept-2018---apr-2019">Ottawa, ON (Sept 2018 - Apr 2019)</h5>
 <p>Prototyped tool for CANSOFCOM to optimize troop schedules using genetic algorithms.</p>
-</section>
 </section>
 <section id="nxp-semiconductors-ai-vision-processor-system-level-design-intern" class="level3">
 <h3 data-anchor-id="nxp-semiconductors-ai-vision-processor-system-level-design-intern">NXP Semiconductors | <em>AI &amp; Vision Processor System Level Design Intern</em></h3>
-<section id="ottawa-on-jan---apr-2018" class="level5">
-<h5 data-anchor-id="ottawa-on-jan---apr-2018">Ottawa, ON (Jan - Apr, 2018)</h5>
 <p>Developed an internal tool to simulate DMA performance of NXP’s accelerated vision processor for ADAS applications. Analyzed results and waveforms to identify bugs in SystemVerilog RTL resulting in 2.73x increase in DMA bandwidth.</p>
-</section>
 </section>
 <section id="home-depot-canada-junior-front-end-web-developer" class="level3">
 <h3 data-anchor-id="home-depot-canada-junior-front-end-web-developer">Home Depot Canada | <em>Junior Front End Web Developer</em></h3>
-<section id="toronto-on-may---aug-2017" class="level5">
-<h5 data-anchor-id="toronto-on-may---aug-2017">Toronto, ON (May - Aug, 2017)</h5>
 <p>Developed features for an internal front-end component library to assist migrating the Home Depot Canada website to React.</p>
-</section>
 </section>
 </section>
 <section id="selected-publications" class="level2">
@@ -543,36 +480,51 @@ No matching items
 </div>
  <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -580,157 +532,184 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.saeejithnair\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      return note.innerHTML;
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -738,185 +717,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
