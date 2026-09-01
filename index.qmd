@@ -49,7 +49,7 @@ Check out my [projects page](projects/) for more!
 
 ## Industry Experience
 
-### Proception.AI | *AI Research Intern*
+### Proception.ai | *AI Research Intern*
 Built teleoperation and data collection systems for dexterous robotic hands and humanoids, and worked on imitation learning from human demonstrations.
 
 ### Nuro.ai | *Software Engineering Intern*
