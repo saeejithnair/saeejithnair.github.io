@@ -35,7 +35,7 @@ comments: false
 ## Bio
 I'm the founder of [Papiers](https://papiers.ai/), a workspace for reading and research. I'm also a second-year PhD student in Systems Design Engineering at UWaterloo's Vision and Image Processing Lab. I'm advised by Prof. [Alexander Wong](https://www.eng.uwaterloo.ca/~a28wong/index.html) and Prof. [Yuhao Chen](https://yhc-1.github.io/yuhao-chen/) and supported by an NSERC CGS-D award.
 
-My research has spanned efficient ML, embedded systems, and robotics, including neural architecture search for NeRFs and vision transformers, latency prediction for on-device inference, synthetic data generation for robotics, and dexterous manipulation. **I'm interested in building intelligent systems capable of open-ended discovery.**
+My research has spanned efficient ML, embedded systems, and robotics, including neural architecture search for NeRFs and vision transformers, latency prediction for on-device inference, synthetic data generation for robotics, and dexterous manipulation. **I'm broadly interested in building intelligent systems capable of open-ended discovery.**
 
 I previously completed an MASc in Systems Design Engineering and a BASc in Mechatronics Engineering with an Option in Artificial Intelligence, both at the University of Waterloo. I have industry experience as a software engineer and AI researcher working across the systems stack, including sensor processing and communications for autonomous vehicles, teleoperation and imitation learning for humanoid robots, real-time computer vision on embedded hardware, safety-critical firmware for aerospace systems, and silicon validation for AI accelerators.
 
