@@ -49,6 +49,9 @@ Check out my [projects page](projects/) for more!
 
 ## Industry Experience
 
+### Proception.AI | *AI Research Intern*
+Built teleoperation and data collection systems for dexterous robotic hands and humanoids, and worked on imitation learning from human demonstrations.
+
 ### Nuro.ai | *Software Engineering Intern*
 Brought up hardware accelerator, implemented efficient digital signal processing algorithms (in C) for radars on self-driving delivery robot, and developed testing architecture for radar HIL simulation chambers.
 
