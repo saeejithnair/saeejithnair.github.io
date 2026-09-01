@@ -47,7 +47,7 @@ Check out my [projects page](projects/) for more!
 :::
 
 
-## Industry Experience
+## Experience
 
 ### Proception.ai | *AI Research Intern*
 Built teleoperation and data collection systems for dexterous robotic hands and humanoids, and worked on imitation learning from human demonstrations.
