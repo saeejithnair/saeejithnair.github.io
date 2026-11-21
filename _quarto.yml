@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  resources:
+    - "tracenb/**"   # tracenb's hosted page, built by tracenb/scripts/build_site.py
   execute-dir: project
 
 website:
